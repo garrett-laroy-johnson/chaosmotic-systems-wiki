@@ -153,7 +153,7 @@ Created by Lithe Ettawageshik for Chaosmotic Systems Fall 2024
 [[Alfred North Whitehead]], [[Modes of Thought]], [[Glissant - Distancing, Determining]], [[Heinz von Foerster]], [[Corporeality]], [[Expression]]
 
 ###### Tags:
-#uncanny #whitehead #foerster #glissant #DG #deleuze #guattari #lacan #freud
+#uncanny #whitehead #foerster #glissant #DG #deleuze #guattari #lacan #freud #bifo #chaos #magic #paglen #holmes
 
 [^1]:Young, Genosko, Watson, "Chaos"*The Deleuze and Guattari Dictionary*, 2013, page 59
 [^2]:Alfred North Whitehead, "Expression" *Modes of Thought*, 1939, page 27
