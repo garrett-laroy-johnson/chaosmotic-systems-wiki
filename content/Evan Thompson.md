@@ -1,0 +1,1 @@
+Neuroscientist and theorist associated with embodiment and [[enactive cognition]]. 

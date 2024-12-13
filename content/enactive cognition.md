@@ -1,0 +1,1 @@
+A theory of mind derived from [[cybernetics]], in particular [[second-order cybernetics]].
