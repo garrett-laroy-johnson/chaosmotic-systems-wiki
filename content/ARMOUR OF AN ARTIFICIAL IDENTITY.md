@@ -139,6 +139,7 @@ I think about this quote quite a lot, mostly the lifting off into a "delirious u
 \-Center for Tactical Magic, "Raiders of the Lost Arts," [*Tactical Magic Manifesto*](https://www.tacticalmagic.org/CTM/thoughts/raiders.htm)
 
 ![[Screenshot 2024-12-12 at 5.04.32 PM.png|500]]
+
 [[Chaos Magick]] - perception is structured around beliefs, and belief can be used as a tool (wikipedia)
 - chaos magic rejects absolute truth? -> whitehead/foerster
 - That last sentence "irrational thinking can often be the faster route to a rational solution," will schizoanalysis and molecular alternative practices enable us to thrive off instability?
@@ -147,9 +148,13 @@ I think about this quote quite a lot, mostly the lifting off into a "delirious u
 There's a lot going on under the hood we do not understand about machines, data, and AI. This exponential development of efficiency happens so quickly in hidden away labs we don't see until they procure a public document for our reading. We're moving so fast towards a hazy horizon. Reading the news sometimes feels like opening up to the chaos of society. Anxiety creates itself out of the dissonance between chaos's unpredictability and our human desire for order. 
 
 Created by Lithe Ettawageshik for Chaosmotic Systems Fall 2024
+
+###### References:
+[[Alfred North Whitehead]], [[Modes of Thought]], [[Glissant - Distancing, Determining]], [[Heinz von Foerster]], [[Corporeality]], [[Expression]]
+
 ###### Tags:
-#uncanny 
-###### Footnotes:
+#uncanny #whitehead #foerster #glissant #DG #deleuze #guattari #lacan #freud
+
 [^1]:Young, Genosko, Watson, "Chaos"*The Deleuze and Guattari Dictionary*, 2013, page 59
 [^2]:Alfred North Whitehead, "Expression" *Modes of Thought*, 1939, page 27
 [^3]: Trevor Paglen, *Invisible Images: Your Pictures Are Looking at You*, 2016, [The New Inquiry](https://thenewinquiry.com/invisible-images-your-pictures-are-looking-at-you/)
