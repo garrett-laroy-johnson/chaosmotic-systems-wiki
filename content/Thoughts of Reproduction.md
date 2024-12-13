@@ -1,4 +1,4 @@
-Some concepts from “History: Reproduction and Heredity” in [[Tree of Knowledge, The Biological Roots of Human Understanding, 1992]] by [[Humberto Maturana]] and [[Francisco Varela]]: 
+Some concepts from “History: Reproduction and Heredity” in *Tree of Knowledge*......
 
 I have always been fascinated by the concept of fraction, which is call the result of reproduction in this context. Let’s look at how the author interprets the term ‘reproduction’.
 
