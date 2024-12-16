@@ -1,5 +1,5 @@
 2024
-<font size=1>7-segment display, ir sensor, stereo speaker, "Taiwan Personal Insult Fine Chart" Meme</font>
+7-segment display, ir sensor, stereo speaker, "Taiwan Personal Insult Fine Chart" Meme
 
 ![[nw_full_edit_edit.jpg]]
 

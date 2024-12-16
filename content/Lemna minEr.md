@@ -1,5 +1,5 @@
 2024
-<font size=1>plant, heavy metal, ceramic test tiles</font>
+plant, heavy metal, ceramic test tiles
 
 ![[DSC04403_edit.jpg]]
 <font size=1>overview / post-fire. (1/2)</font>
