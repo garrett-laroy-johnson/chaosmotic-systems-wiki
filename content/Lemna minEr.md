@@ -46,7 +46,7 @@ Another path is to focus on the water pollution challenges in Taiwan, exacerbate
 
 As discussed in _[[Order Out of Chaos]]_, Alexandre Koyré defines the innovation of modern science in terms of "experimentation." He states:
 
-> "Modern science is based on the discovery of a new and specific form of communication with nature—that is, on the conviction that nature responds to experimental interrogation. How can we define more precisely the experimental dialogue? Experimentation does not mean merely the faithful observation of facts as they occur, nor the mere search for empirical connections between phenomena, but presupposes a systematic interaction between theoretical concepts and observation" ([[Ilya Prigogine]] and [[Isabelle Stengers]], 5).
+> "Modern science is based on the discovery of a new and specific form of communication with nature—that is, on the conviction that nature responds to experimental interrogation. How can we define more precisely the experimental dialogue? Experimentation does not mean merely the faithful observation of facts as they occur, nor the mere search for empirical connections between phenomena, but presupposes a systematic interaction between theoretical concepts and observation." ([[Ilya Prigogine]] and [[Isabelle Stengers]], 5).
 
 This perspective inspires the project to embrace a systematic dialogue between theoretical frameworks and practical observation. By maintaining a spirit rooted in chaos theory, the *Lemna minEr* project merge scientific exploration with artistic critique, fostering a hybrid form of experimentation.
 
@@ -54,7 +54,7 @@ This perspective inspires the project to embrace a systematic dialogue between t
 
 Grounded in the principles of chaos theory, the project embraces the inherent unpredictability and interconnectedness of systems. Furthermore, it aligns with the concept of time’s irreversibility, a foundational idea in thermodynamics. As _[[Order Out of Chaos]]_ notes:
 
-> “As for thermodynamics, it is based on the distinction of two types of processes: reversible processes, which are independent of the direction of time, and irreversible processes, which depend on the direction of time" (Prigogine and Stengers, 12).
+> “As for thermodynamics, it is based on the distinction of two types of processes: reversible processes, which are independent of the direction of time, and irreversible processes, which depend on the direction of time." (Prigogine and Stengers, 12).
 
 This philosophical underpinning not only informs the scientific methodologies employed but also guides the narrative arc of the project. It emphasizes the irreversible and evolving nature of ecological and cultural systems, instilling a sense of urgency, purpose, and drive toward meaningful action.
 
