@@ -15,7 +15,7 @@ As Max Haiven notes in _Art After Money, Money After Art: Creative Strategies Ag
 
 This work seeks to engage with the dynamics of culture within state apparatuses and legal systems, presenting an abstraction of financialization within an artistic context. 
 
-By recontextualizing a digital meme into a physical and artistic form, the work not only critiques the commodification of language but also invites viewers to question the legitimacy of the whole act. This act of translation—from meme to installation—highlights the underlying tensions between intangible social phenomena and the tangible systems that regulate and monetize them, positioning art as a critical medium for examining and challenging these dynamics.
+By recontextualizing a digital meme into a physical and artistic form, the work not only critiques the commodification of language but also invites viewers to question the legitimacy of the whole act. This act of translation—from meme to installation—highlights the underlying tensions between intangible social phenomena and the tangible systems that regulate and monetize them, positioning art as a critical medium for examining and challenging these dynamics.  
 
 ---
 
