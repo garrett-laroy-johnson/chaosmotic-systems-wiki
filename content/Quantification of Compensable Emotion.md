@@ -9,7 +9,7 @@
 
 By materializing the "Taiwan Personal Insult Fine Chart" Meme, what originally exists in digital spaces, the printed score legitimizes itself as a visualized score, juxtaposed with the installation's electronic components. This disconnection highlights the abstraction and excess inherent in a monetary system operating within cultural and linguistic frameworks.
 
-As Max Haiven notes in _Art After Money, Money After Art: Creative Strategies Against Financialization_:
+As Max Haiven notes in _[[Art After Money, Money After Art]]: Creative Strategies Against Financialization_:
 
 > “Contemporary art is economically valuable as both ‘contemporary’ and as ‘art,’ and can therefore be financialized, precisely because it somehow retains and manifests its own refusal of capitalism’s axiom of value” (Haiven, 4).
 
