@@ -1,4 +1,4 @@
-: Creative Strategies Against Financialization
+: Creative Strategies Against Financialization, published by Pluto Press in 2018.
 
 by Max Haiven, _Art After Money, Money After Art: Creative Strategies Against Financialization_ challenges the myth of art and money as opposing forces, revealing how this narrative perpetuates the exploitation and inequities of global capitalism. In an era dominated by financialization—where art often becomes a tool for plutocratic power and creative economies fuel new forms of labor exploitation—Haiven calls for a radical reimagining of art’s role. Through a critical examination of contemporary artistic practices that engage with themes of money, debt, and credit, the book explores strategies to subvert, resist, and reconfigure capitalism. Aimed at artists, activists, and scholars, it advocates for leveraging the radical imagination to disrupt oppressive systems and envision transformative alternatives.
 
