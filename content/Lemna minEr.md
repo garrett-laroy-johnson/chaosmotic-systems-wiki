@@ -67,3 +67,5 @@ Through the integration of science and art, the project aspires to craft alterna
 
 ---
 <font size=2>Special thanks to Andy Scarpelli and Felix Horan;  The realization of this project would not have been possible without their invaluable supports and contributions.</font>
+
+#FA24 

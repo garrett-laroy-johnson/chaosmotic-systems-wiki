@@ -10,3 +10,5 @@ see: [[Surveillance Systems]]
 ...to be continued eventually some time somewhere
 
 					(Draft)
+
+#FA24 
