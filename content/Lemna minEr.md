@@ -59,7 +59,7 @@ Grounded in the principles of chaos theory, the project embraces the inherent un
 This philosophical underpinning not only informs the scientific methodologies employed but also guides the narrative arc of the project. It emphasizes the irreversible and evolving nature of ecological and cultural systems, instilling a sense of urgency, purpose, and drive toward meaningful action.
 
 ---
-##### **Conclusion**
+##### Conclusion
 
 By situating _Lemna minor_ within the dual contexts of bioremediation dynamics and Taiwan’s water pollution crisis, the project seeks to bridge art and science—utilizing science as a logistical foundation and art as a medium for outreach and awareness. This interdisciplinary approach critically examines the pedagogical framework of scientific methodologies, questioning how these parameters are established and interpreted in dialogue.
 
