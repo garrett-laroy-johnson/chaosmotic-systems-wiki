@@ -1,8 +1,11 @@
+![[who-is-the-creator-of-the-artwork-1213-2024.png]]
+
 ## Psuedorandomness
 
 When people talked about “random”, they usually thought of something that is unpredictable. However, in the field of computer science, randomness is not as simple as it seems. In fact, it is a very complex and interesting topic.
 
 Let's start with take a look from the [Python documentation about random](https://docs.python.org/3/library/random.html):
+
 > **random — Generate pseudo-random numbers**
 > 
 > This module implements pseudo-random number generators for various distributions.
