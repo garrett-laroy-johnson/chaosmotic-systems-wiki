@@ -16,4 +16,4 @@ Donna Haraway's concept of "SF" encompasses science fiction, speculative fabulat
 
 [Scholars Bank](https://scholarsbank.uoregon.edu/xmlui/bitstream/handle/1794/26308/ada03-sfsci-har-2013.pdf?utm_source=chatgpt.com)
 
-In summary, the convergence of these ideas highlights the intricate relationships between scientific theories, critical thought, activism, and speculative narratives. Together, they offer pathways to reimagine and address the pressing challenges of our time, advocating for a more engaged and responsible interaction with our planet and its diverse inhabitants.
+In summary, the convergence of these ideas highlights the intricate relationships between scientific theories, critical thought, activism, and speculative narratives. Together, they offer pathways to reimagine and address the pressing challenges of our time, advocating for a more engaged and responsible interaction with our planet and its diverse inhabitants. 
