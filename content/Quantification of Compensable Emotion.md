@@ -17,6 +17,12 @@ This work seeks to engage with the dynamics of culture within state apparatuses 
 
 By recontextualizing a digital meme into a physical and artistic form, the work not only critiques the commodification of language but also invites viewers to question the legitimacy of the whole act. This act of translation—from meme to installation—highlights the underlying tensions between intangible social phenomena and the tangible systems that regulate and monetize them, positioning art as a critical medium for examining and challenging these dynamics.  
 
+**"Matters of Concern"**
+
+[[Bruno Latour]] opens his essay _Why Has Critique Run Out of Steam?_ by reflecting on the endless "wars" waged in cultural, scientific, and social spheres, questioning whether scholars and intellectuals should perpetuate this cycle of destruction. He critiques academia's fixation on outdated targets, likening scholars to mechanical toys repeating actions in a changed world. Latour calls for a shift from deconstruction to a focus on "matters of concern," urging academics to confront emerging threats with innovative approaches.
+
+_Quantification of Compensable Emotion_ resonates with Latour’s call by repurposing surveillance technology to critique the very state apparatus that birthed it. The work transforms a tool of control into a platform for interrogating power structures, exemplifying Latour’s vision of moving beyond critique. It addresses "matters of concern" by examining the legal systems that assign monetary value to emotional expressions, challenging the commodification and regulation of human experience.
+
 ---
 
 <font size=2>Special thanks to Misha KhoKhlov, Lee Blalock, and Clio Tseng; The realization of this project would not have been possible without their invaluable supports and contributions.</font>

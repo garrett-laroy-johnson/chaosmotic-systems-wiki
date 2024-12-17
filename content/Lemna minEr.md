@@ -42,7 +42,7 @@ One potential direction is to delve deeper into the dynamics of bioremediation t
 Another path is to focus on the water pollution challenges in Taiwan, exacerbated by the rapid development of the semiconductor industry. Heavy metals such as [hexavalent chromium, arsenic, lead](https://www.newsmarket.com.tw/blog/112442/), and [nickel](https://udn.com/news/story/7324/8028425), are major pollutants associated with this industry. Studies suggest that while _Lemna minor_ is capable of bioremediating some of these heavy metals, others accumulate in the silt and sediment of river bodies. This raises significant health concerns, especially given the proximity of these polluted sites to drinking water intake infrastructure. Incorporating bioremediation into this context could highlight its potential as a solution while addressing broader environmental and public health challenges.
 
 ---
-##### Philosophical Framework
+##### Theoretical Framework
 
 As discussed in _[[Order Out of Chaos]]_, Alexandre Koyré defines the innovation of modern science in terms of "experimentation." He states:
 
