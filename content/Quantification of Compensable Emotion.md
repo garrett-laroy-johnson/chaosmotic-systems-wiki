@@ -21,7 +21,7 @@ By recontextualizing a digital meme into a physical and artistic form, the work 
 
 [[Bruno Latour]] opens his essay _Why Has Critique Run Out of Steam?_ by reflecting on the endless "wars" waged in cultural, scientific, and social spheres, questioning whether scholars and intellectuals should perpetuate this cycle of destruction. He critiques academia's fixation on outdated targets, likening scholars to mechanical toys repeating actions in a changed world. Latour calls for a shift from deconstruction to a focus on "matters of concern," urging academics to confront emerging threats with innovative approaches.
 
-_Quantification of Compensable Emotion_ resonates with Latour’s call by repurposing surveillance technology to critique the very state apparatus that birthed it. The work transforms a tool of control into a platform for interrogating power structures, exemplifying Latour’s vision of moving beyond critique. It addresses "matters of concern" by examining the legal systems that assign monetary value to emotional expressions, challenging the commodification and regulation of human experience.
+_Quantification of Compensable Emotion_ resonates with Latour’s call by repurposing surveillance technology to critique the very state apparatus that birthed it. The work transforms a tool of control into a platform for interrogating power structures, exemplifying Latour’s vision of moving beyond critique. It addresses "matters of concern" by examining the legal systems that assign monetary value to emotional expressions, challenging the commodification and regulation of human experience. 
 
 ---
 
