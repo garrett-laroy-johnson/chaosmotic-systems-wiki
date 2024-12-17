@@ -5,7 +5,10 @@
 
 *Quantification of Compensable Emotion* is a sound installation utilizing electronic circuitry with an infrared sensor triggering two outputs: a speaker playback and a numerical display. The motion sensor activates an audio recording of the Taiwanese swear word 「幹你娘」 ("motherf-ker") and increments the display by $2,666 USD-the highest fine ever imposed for using the phrase under [Taiwan’s Civil Code Article 195](https://law.moj.gov.tw/ENG/LawClass/LawSearchContent.aspx?pcode=B0000001&norge=195). This work explores the commodification of emotion and language within legal systems, seek to examine the interplay and excess that emerge between social expression and ethical value within institutional frameworks.
 
+---
+
 ###### More...
+
 
 By materializing the "Taiwan Personal Insult Fine Chart" Meme, what originally exists in digital spaces, the printed score legitimizes itself as a visualized score, juxtaposed with the installation's electronic components. This disconnection highlights the abstraction and excess inherent in a monetary system operating within cultural and linguistic frameworks.
 
