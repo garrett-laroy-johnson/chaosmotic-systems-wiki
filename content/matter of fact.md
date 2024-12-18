@@ -1,0 +1,1 @@
+'The way it is', things as they appear. 
