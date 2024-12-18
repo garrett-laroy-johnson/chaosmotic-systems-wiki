@@ -9,3 +9,5 @@ Chaosmotic Systems: Culture, Cosmology, Computation is an MFA-level seminar taug
 This repository serves as an entry point for the course's collaborative wiki project. Here is the [[Assignment]].
 
 For information on contributing to the WIKI, please follow instructions on the [[Technical instructions]]
+
+To see projects developed during the first iteration of the class, see posts tagged with #FA24 
