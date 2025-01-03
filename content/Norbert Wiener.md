@@ -1,0 +1,1 @@
+The theorist who first articulated [[cybernetics]].
