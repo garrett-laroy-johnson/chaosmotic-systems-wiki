@@ -1,10 +1,11 @@
+by [[Eduardo Glissant]]
 ### 1. "Proposition"
 Glissant critiques Western concepts of ~~universality~~, which often impose one culture’s perspective on others. Instead, he proposes an idea of totality that respects and integrates **differences** without subsuming them into one dominant narrative.
 **==Opacity:==**
-we must accept and respect the “opacity” of others—the aspects of a culture or individual that are **not immediately legible or understandable**. This is crucial to ethical engagement, as it avoids forcing others into predefined categories.
+we must accept and respect the “[[opacity]]” of others—the aspects of a culture or individual that are **not immediately legible or understandable**. This is crucial to ethical engagement, as it avoids forcing others into predefined categories.
 
 ==**Rhizomatic Thinking**:==
-Borrowing from Deleuze and Guattari’s concept of the rhizome, Glissant’s proposition advocates for **non-linear, decentralized modes** of thought and being. It emphasizes **networked connections that grow in multiple directions without a singular root or center.**
+Borrowing from Deleuze and Guattari’s concept of the [[rhizome]], Glissant’s proposition advocates for **non-linear, decentralized modes** of thought and being. It emphasizes **networked connections that grow in multiple directions without a singular root or center.**
 
 **Relational Ethics**: This framework insists on ethical responsibility in relationships—between people, cultures, and environments. It suggests that **every interaction contributes to a larger, shared world without reducing differences.**
 
@@ -26,7 +27,7 @@ We shall guard against suggesting, parabolically, beings would be solid and Bein
 
 **Interconnectedness**: Relation moves beyond static notions of identity to acknowledge the dynamic interplay between peoples, cultures, and histories. Instead of individuality rooted in isolation, Relation seeks a **constant exchange that transforms all participants.**
 
--**Multiplicity and [[Chaosmos with Prigogyne, Ilya and Isabelle Stengers]] :Rather than reducing diversity into universal truths, **Relation embraces multiplicity and chaos.** Glissant values the complexities and contradictions inherent in cultural exchanges. This ==chaos is not disorder but a== ==productive force generating new meanings and connections.==
+-**Multiplicity and [[Chaos]] :Rather than reducing diversity into universal truths, **Relation embraces multiplicity and chaos.** Glissant values the complexities and contradictions inherent in cultural exchanges. This ==chaos is not disorder but a== ==productive force generating new meanings and connections.==
 
 -**Openness**: Relation rejects closed systems of thought, encouraging an openness to difference and opacity (the right of others to **remain incomprehensible**). This openness does not demand assimilation but creates space for coexistence.
 
