@@ -5,3 +5,5 @@ It’s precisely these struggles that allowed the more self-consciously ‘milit
 The Endnotes article from where this quote comes from was in response to the George Floyd uprising, it is both shocking and really not, how much their words apply to the current situation.
 
 Sobering, harsh yet necessary criticism is needed for the revolutionary movement in the United States see: [[Surveillance Systems]] ...to be continued eventually some time somewhere
+
+[[Forms of Process]]

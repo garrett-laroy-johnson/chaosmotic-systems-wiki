@@ -12,9 +12,9 @@ Expression centers around [[Corporeality]] - "we cannot define where a body begi
 - "The body is part of the external world"
   > "Thus we arrive at this definition of our bodies: The human body is that region of the world which is the primary field of human expression"(22)
 
-Whitehead creates this idea that animal bodies contain 'centers of experience,' where each center possesses its own experience. Basically, a stomach experiences digestion, whereas a heart experiences pumping of blood - and the animal as a whole exists out of the conversation between these 'centers of experience.' These organs, these 'centers of experience,' are specialists of their own function.
+Whitehead creates this idea that animal bodies contain 'centers of experience,' where each center possesses its own experience. Basically, a stomach experiences digestion, whereas a heart experiences pumping of blood - and the animal as a whole exists out of the conversation between these 'centers of [[experience]].' These organs, these 'centers of experience,' are specialists of their own function.
 
-> "The body is composed of various centers of experience imposing the expression of themselves on each other. _Feeling (in the sense here used, or prehension, is the reception of expressions._ Expressions are the data for feeling diffused in the environment; and a living body is a peculiarly close adjustment of these two sides of experience, namely, expression and feeling." (23)
+> "The body is composed of various centers of experience imposing the expression of themselves on each other. _[[Feeling]] (in the sense here used, or prehension, is the reception of expressions._ Expressions are the data for feeling diffused in the environment; and a living body is a peculiarly close adjustment of these two sides of experience, namely, expression and feeling." (23)
 
 species and generality - 'an animal body is a feudal society' (25)
 

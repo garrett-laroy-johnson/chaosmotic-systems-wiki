@@ -27,6 +27,6 @@ _Quantification of Compensable Emotion_ resonates with Latour’s call by repurp
 
 ---
 
-<font size=2>Special thanks to Misha KhoKhlov, Lee Blalock, and Clio Tseng; The realization of this project would not have been possible without their invaluable supports and contributions.</font>
+<!-- <font size=2>Special thanks to Misha KhoKhlov, Lee Blalock, and Clio Tseng; The realization of this project would not have been possible without their invaluable supports and contributions.</font> -->
 
 #FA24
