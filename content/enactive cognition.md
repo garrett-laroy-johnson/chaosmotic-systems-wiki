@@ -1,1 +1,1 @@
-A theory of mind derived from [[cybernetics]], in particular [[second-order cybernetics]]. A theory of [[corporeality]].
+A theory of mind derived from [[cybernetics]], in particular [[second-order cybernetics]].

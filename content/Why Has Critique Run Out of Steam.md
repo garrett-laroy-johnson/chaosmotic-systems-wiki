@@ -1,5 +1,0 @@
-# Why Has Critique Run out of Steam? by [[Bruno Latour]]
-
-Bruno Latour’s essay _“[Why Has Critique Run Out of Steam?](https://www.journals.uchicago.edu/doi/10.1086/421123)”_ reflects on the limitations of critical theory in the modern age and its unintended consequences. Published in 2004, the essay critiques the way [[deconstructionist\\ and relativist arguments have been co-opted by “merchants of doubt” to undermine scientific and social consensus on urgent issues like climate change. Latour questions whether [[critique\]] has lost its capacity to build and protect what truly matters, having become overly focused on debunking truths rather than fostering constructive action.
-
-Latour proposes shifting critique from its traditional role of exposing falsities to becoming a tool for engaging with “[[matters of concern]].” He argues for a reimagined approach that emphasizes [[care]], [[responsibility]], and collaboration, aiming to strengthen collective efforts to address pressing global challenges. This pivotal essay has become a cornerstone for rethinking critique in the [[Anthropocene]] and beyond.
