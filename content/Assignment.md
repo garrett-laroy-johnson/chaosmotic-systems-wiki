@@ -3,7 +3,7 @@
 
 ## Assignment
 
-In place of a normal seminar presentation, you will write (6) 500-word articles (or equivalent) which will be published on [[Index]].
+In place of a normal seminar presentation, you will write (6) 500-word articles (or equivalent) which will be published on [[index]].
 
 (3) should be concepts, authors, artworks or readings directly from the class. pick materials which support your final project conceptually.
 
@@ -14,3 +14,5 @@ In place of a normal seminar presentation, you will write (6) 500-word articles 
 You **must** interlink your articles with each other using the linking function inside Obsidian. Please note that the impact of this assignment will come from the generation of a large, navigable web which will allow for the movement between your articles and your peers.
 
 Please consult [[Technical instructions]] to learn how to contribute. 
+  
+
