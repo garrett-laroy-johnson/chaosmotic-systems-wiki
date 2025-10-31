@@ -1,3 +1,5 @@
+[[Alfred North Whitehead]]
+
 [[Proposition and Relation by Glissant, Eduardo. Poetics of Relation]] 
 
 "==*If a tree falls in a forest and no one is around to hear it, does it make a sound?"*== 

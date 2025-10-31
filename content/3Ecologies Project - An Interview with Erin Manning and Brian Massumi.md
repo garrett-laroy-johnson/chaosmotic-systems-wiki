@@ -1,0 +1,3 @@
+"Philosophy lived is philosophy practiced. As Brian says, there is no appetite here for critique. We don’t read to find the inconsistencies in thought and to fill the gaps with something from outside a given philosopher’s operative logic. Certainly, there can be times when it’s necessary to prolong a concept by other philosophical means, but mostly our work is to become more acquainted with what textures this singular thought and to _try it out_." This passage specifically is so [[Paul Sutherland LARP Politics and Hyperreality]]-coded, and kinda [[Modes of Thought - Alfred North Whitehead]]-coded??? (provided I understood the text, that is)
+
+*leeooo wuz here >:) Fall 2025*
