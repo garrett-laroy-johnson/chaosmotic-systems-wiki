@@ -2,7 +2,7 @@
 
 Chaosmotic Systems: Culture, Cosmology, Computation is an MFA-level seminar taught by Grace Grace Grace. It was taught for the first time at the School of the Art Institute of Chicago in the Art Technology / Sound Practices department during Fall 2024 semester. The course materials are public and can be accessed here.
 
-This repository serves as an entry point for the course's collaborative wiki project. Students will contribute (5) 500-word articles about concepts, authors,
+This repository serves as an entry point for the course's collaborative wiki project. Students will contribute (5) 500-word articles about concepts, authors, books, or however else you would like to proceed. 
 
 ## Installation
 ### Obsidian
@@ -54,7 +54,26 @@ Open Obsidian and click "open folder as vault". Find your `chaosmotic-systems-wi
 
 Cool! You're done. You are set up to edit. Open Obsidian, make changes, and see them reflected on the Quartz webpage. Follow the instructions below to make your changes public.
 
-## Editing Workflow
+## ✨ **NEW: Web Editor (Recommended for Students)**
+
+For an easier experience without command line tools, use our web-based collaborative editor:
+
+1. **Start the web editor**: Run `cd wiki-editor && npm start`
+2. **Open in browser**: Go to `http://localhost:3000`
+3. **Log in** with your student credentials
+4. **Write your articles** with live preview and automatic wiki links
+5. **Click "Publish"** - that's it! No command line needed.
+
+The web editor automatically handles all the git operations and prevents conflicts.
+
+**Key Features:**
+- 🔄 **Smart Sync**: Hover over "Sync" to see "Synchronize your computer with changes on the server"
+- 📤 **One-Click Publish**: The "Publish" button automates all git commands (add, commit, push)
+- 🔗 **Auto-Link Creation**: Type `[[Page Name]]` and it creates the page automatically
+- 👁️ **Live Preview**: See your markdown rendered in real-time
+- ⚠️ **Status Indicators**: Shows when you have unpublished changes
+
+## Editing Workflow (Traditional Method)
 Already installed and stepped away? Made some changes are ready to make them public? Here's how to get back into your flow. **Important: Always pull updates before editing and push your changes when done.**
 
 ### Before Editing

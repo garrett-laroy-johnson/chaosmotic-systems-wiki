@@ -1,3 +1,7 @@
+---
+title: Gaia Theory and Tree of Knowledage
+---
+
 [[Tree of Knowledge, The Biological Roots of Human Understanding, 1992]]
 [[Importance and Understanding By Whitehead]]
 [[Proposition and Relation by Glissant, Eduardo. Poetics of Relation]]
