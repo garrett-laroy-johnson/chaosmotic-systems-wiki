@@ -122,11 +122,15 @@ class GitManager {
         return { success: true, noChanges: true };
       }
       
-      console.log(`Found ${status.files.length} changed files to publish`);
+      console.log(`Found ${status.files.length} changed files to publish:`);
+      status.files.forEach(file => {
+        console.log(`  - ${file.path} (${file.working_dir})`);
+      });
       
       // Step 2: Add all changes (git add .)
+      console.log('Adding all changes to staging area...');
       await git.add('.');
-      console.log('Staged all changes');
+      console.log('Successfully staged all changes');
       
       // Step 3: Commit with descriptive message
       const timestamp = new Date().toLocaleString('en-US', {
@@ -141,16 +145,25 @@ class GitManager {
       
       // Step 4: Push to current branch
       const currentBranch = await git.revparse(['--abbrev-ref', 'HEAD']);
+      console.log(`Attempting to push to origin/${currentBranch}...`);
       await git.push('origin', currentBranch);
-      console.log(`Pushed changes to origin/${currentBranch}`);
+      console.log(`Successfully pushed changes to origin/${currentBranch}`);
       
       // Step 5: Wait a moment for git operations to fully complete
       console.log('Waiting for git operations to stabilize...');
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       // Step 6: Verify the status is clean
+      console.log('Verifying final git status...');
       const finalStatus = await git.status();
       console.log(`Final status check: ${finalStatus.files.length} files remaining`);
+      
+      if (finalStatus.files.length > 0) {
+        console.warn('Warning: Some files still show as modified after publish:');
+        finalStatus.files.forEach(file => {
+          console.warn(`  - ${file.path} (${file.working_dir})`);
+        });
+      }
       
       return { 
         success: true, 
@@ -161,7 +174,20 @@ class GitManager {
       
     } catch (error) {
       console.error('Publish workflow error:', error);
-      return { success: false, error: error.message };
+      
+      // Provide more specific error messages for common git issues
+      let errorMessage = error.message;
+      if (error.message.includes('Authentication failed')) {
+        errorMessage = 'Git authentication failed. Please check your git credentials.';
+      } else if (error.message.includes('not a git repository')) {
+        errorMessage = 'This directory is not a git repository.';
+      } else if (error.message.includes('Permission denied')) {
+        errorMessage = 'Permission denied. Check file permissions and git access.';
+      } else if (error.message.includes('remote rejected')) {
+        errorMessage = 'Remote repository rejected the push. You may need to pull latest changes first.';
+      }
+      
+      return { success: false, error: errorMessage, details: error.message };
     }
   }
 }
