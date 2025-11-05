@@ -9,6 +9,7 @@ A collaborative web-based editor for your Quartz wiki that eliminates the need f
 - Live markdown preview
 - No command line required
 - Automatic git operations
+- **Obsidian-style wiki links** - `[[Page Name]]` automatically creates new pages!
 
 🔐 **User Management**
 - Simple login system
@@ -257,13 +258,28 @@ npm start
 - **Port 8080**: Live Quartz site with automatic updates
 - **When students save**: Changes appear instantly in Quartz!
 
+### Obsidian-Style Wiki Links
+
+The editor automatically creates new pages when students link to them:
+
+1. **Student types**: `Check out [[My New Article]] for more info`
+2. **Student saves** the article
+3. **System automatically creates** `my-new-article.md` with basic template
+4. **Both files are committed** to git with proper attribution
+5. **Links work immediately** in both the editor and Quartz!
+
+**Supported link formats:**
+- `[[Page Name]]` - Creates and links to "page-name.md"
+- `[[Page Name|Display Text]]` - Creates "page-name.md" but shows "Display Text"
+
 ### Live Preview Integration
 
 Students can:
 1. **Edit** in the web editor with markdown preview
-2. **Save** their work (auto-commits to git)
-3. **Click "Live Site"** to see their article in the actual Quartz wiki
-4. **Share the Quartz URL** with classmates to see the final result
+2. **Create wiki links** that automatically generate new pages
+3. **Save** their work (auto-commits to git)
+4. **Click "Live Site"** to see their article in the actual Quartz wiki
+5. **Share the Quartz URL** with classmates to see the final result
 
 ## Support
 

@@ -104,6 +104,99 @@ class GitManager {
   }
 }
 
+// Link processing utilities
+class LinkProcessor {
+  static extractObsidianLinks(content) {
+    // Match [[link]] patterns, including [[link|display text]]
+    const linkRegex = /\[\[([^\]|]+)(\|[^\]]+)?\]\]/g;
+    const links = [];
+    let match;
+    
+    while ((match = linkRegex.exec(content)) !== null) {
+      const linkText = match[1].trim();
+      // Convert to filename format
+      const filename = this.linkToFilename(linkText);
+      links.push({
+        original: match[0],
+        linkText: linkText,
+        filename: filename
+      });
+    }
+    
+    return links;
+  }
+  
+  static linkToFilename(linkText) {
+    // Convert link text to valid filename
+    return linkText
+      .replace(/[^\w\s-]/g, '-') // Replace special characters with hyphens
+      .replace(/\s+/g, '-') // Replace spaces with hyphens
+      .replace(/-+/g, '-') // Collapse multiple hyphens
+      .replace(/^-|-$/g, '') // Remove leading/trailing hyphens
+      .toLowerCase() + '.md';
+  }
+  
+  static async createMissingLinkedPages(content, author) {
+    const links = this.extractObsidianLinks(content);
+    const createdFiles = [];
+    
+    if (links.length === 0) {
+      return createdFiles; // No links found
+    }
+    
+    console.log(`Found ${links.length} wiki links, checking for missing pages...`);
+    
+    for (const link of links) {
+      const filePath = path.join(CONTENT_DIR, link.filename);
+      
+      try {
+        // Check if file already exists
+        await fs.access(filePath);
+        console.log(`Linked page already exists: ${link.filename}`);
+      } catch (error) {
+        // File doesn't exist, create it
+        const title = link.linkText;
+        const blankContent = `---
+title: ${title}
+---
+
+# ${title}
+
+This page was automatically created because it was linked from another article.
+
+Write your content here...
+`;
+        
+        try {
+          await fs.writeFile(filePath, blankContent, 'utf8');
+          createdFiles.push({
+            filename: link.filename,
+            title: title,
+            linkText: link.linkText
+          });
+          
+          console.log(`✅ Auto-created linked page: ${link.filename} (${title})`);
+        } catch (writeError) {
+          console.error(`❌ Failed to create linked page ${link.filename}:`, writeError.message);
+        }
+      }
+    }
+    
+    // If we created files, commit them
+    if (createdFiles.length > 0) {
+      try {
+        const commitMessage = `Auto-create linked pages: ${createdFiles.map(f => f.title).join(', ')} (by ${author})`;
+        await GitManager.commitAndPush(commitMessage, author);
+        console.log(`✅ Committed ${createdFiles.length} new linked pages`);
+      } catch (commitError) {
+        console.error(`❌ Failed to commit linked pages:`, commitError.message);
+      }
+    }
+    
+    return createdFiles;
+  }
+}
+
 // File operations
 class FileManager {
   static async listFiles() {
@@ -157,9 +250,18 @@ class FileManager {
       const filePath = path.join(CONTENT_DIR, filename);
       await fs.writeFile(filePath, content, 'utf8');
       
-      // Auto-commit changes
+      // Process Obsidian-style links and create missing pages
+      const createdFiles = await LinkProcessor.createMissingLinkedPages(content, author);
+      
+      // Auto-commit the main file
       const commitMessage = `Update ${filename} by ${author}`;
-      return await GitManager.commitAndPush(commitMessage, author);
+      const result = await GitManager.commitAndPush(commitMessage, author);
+      
+      // Return result with info about created files
+      return {
+        ...result,
+        createdLinkedPages: createdFiles
+      };
     } catch (error) {
       throw new Error(`Failed to write file: ${error.message}`);
     }
@@ -295,6 +397,20 @@ app.get('/api/files/:filename/history', requireAuth, async (req, res) => {
   try {
     const history = await GitManager.getFileHistory(req.params.filename);
     res.json({ history });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Link detection test route
+app.post('/api/test-links', requireAuth, async (req, res) => {
+  try {
+    const { content } = req.body;
+    const links = LinkProcessor.extractObsidianLinks(content);
+    res.json({ 
+      message: `Found ${links.length} wiki links`,
+      links: links
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
