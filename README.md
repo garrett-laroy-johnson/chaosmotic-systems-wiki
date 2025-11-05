@@ -30,7 +30,7 @@ You will need to install via Terminal.
 
 ### Final Installation Steps
 
-Open your favorite application (if you haven't already): Terminal on Mac OS; Command Prompt or Powershell ([run as Administrator](https://electro-smith.com/products/daisy-seed)) on Windows.
+Open your favorite application (if you haven't already): Terminal on Mac OS; Command Prompt or Powershell ([run as Administrator](https://www.google.com/search?q=run+powershell+as+admin&sourceid=chrome&ie=UTF-8)) on Windows.
 
 #### Authenticate GitHub
 
@@ -55,21 +55,54 @@ Open Obsidian and click "open folder as vault". Find your `chaosmotic-systems-wi
 Cool! You're done. You are set up to edit. Open Obsidian, make changes, and see them reflected on the Quartz webpage. Follow the instructions below to make your changes public.
 
 ## Editing Workflow
-Already installed and stepped away? Made some changes are ready to make them public? Here's how to get back into your flow. Changes will appear on the public website only ager your successfully run `npx quartz sync`. Sync before you make changes. Sync after you make changes.
+Already installed and stepped away? Made some changes are ready to make them public? Here's how to get back into your flow. **Important: Always pull updates before editing and push your changes when done.**
 
 ### Before Editing
-1. As a matter of habit, everytime you open Obsidian, you should also open terminal.
+1. As a matter of habit, every time you open Obsidian, you should also open terminal.
 2. Enter `cd chaosmotic-systems-wiki`. 
-3. Run the command `npx quartz sync`. This will synchonize the materials on your local machine with the version on GitHub which is shared by the class. **Sync before you make changes. Sync after you make changes.** 
-4. When complete, run `npx quartz build --serve`.
-5. Open your browser and navigate to [http://localhost:8080]([url](http://localhost:8080)) to see a preview of the site that reflects your local changes.
+3. **Get the latest changes from your classmates:** Run `git pull origin v4` 
+4. **Start the preview server:** Run `npx quartz build --serve`
+5. Open your browser and navigate to [http://localhost:8080](http://localhost:8080) to see a preview of the site that reflects your local changes.
 
 Go back to Obsidian and add your content. You will see the work previewed as a local server in the browser.
 
-### Uploading
-Upload often. This will take your changes and synchronize them to the remote server attached to the public domain. 
+### Publishing Your Changes
+When you're ready to share your work with the class:
 
-1. Now that we've made some changes we want to make public, return to your terminal window. Type `ctrl + c` to stop the local webserver.
-2. Run `npx quartz sync`. Your changes should soon be live. You can double check that this was successful by going to the GitHub page and looking at the `content` directory. Your files should be present there.
+1. **Stop the local server:** In your terminal window, type `Ctrl + C` to stop the local webserver.
+2. **Check what you've changed:** Run `git status` to see your modified files
+3. **Add your changes:** Run `git add .` to stage all your changes
+4. **Commit with a message:** Run `git commit -m "Add article about [describe your topic]"` (replace with your actual topic)
+5. **Push to share:** Run `git push origin v4`
 
-Note: If you get an error, it may be because you have not logged into your GitHub account and gotten privleges. You will need to login to your account in the Termainl, and also need to have communicated your GitHub ID to the course TA who will add you as a collaborator on the repository (you will need to confirm this in an email). 
+Your changes should now be live! You can verify by checking the GitHub page and looking at the `content` directory.
+
+## Troubleshooting Common Issues
+
+### Permission Errors
+If you get an error when pushing, it may be because:
+- You haven't logged into your GitHub account: Make sure you completed `gh auth login`
+- You don't have collaborator privileges: Communicate your GitHub username to the course TA who will add you as a collaborator (you'll need to accept the email invitation)
+
+### Merge Conflicts
+If you see a message about "merge conflicts" when pulling:
+1. **Don't panic!** This happens when you and a classmate edited the same file
+2. Open the conflicted file in Obsidian or a text editor
+3. Look for sections marked with `<<<<<<<`, `=======`, and `>>>>>>>`
+4. Decide which version to keep (yours, theirs, or a combination)
+5. Remove the conflict markers and save the file
+6. Run `git add .` then `git commit -m "Resolve merge conflict"`
+7. Continue with `git push origin v4`
+
+### "Your branch is behind" Messages
+If git says your branch is behind:
+1. Run `git pull origin v4` to get the latest changes
+2. If there are no conflicts, proceed normally
+3. If there are conflicts, follow the merge conflict steps above
+
+### Emergency Reset
+If things get really messed up and you want to start fresh:
+1. **Backup your new content files first!** Copy them somewhere safe
+2. Run `git reset --hard origin/v4` to reset to the latest version
+3. Copy your backed-up files back into the content folder
+4. Follow the normal workflow to add and commit them 
