@@ -137,10 +137,19 @@ class GitManager {
       await git.push('origin', 'v4');
       console.log('Pushed changes to origin/v4');
       
+      // Step 5: Wait a moment for git operations to fully complete
+      console.log('Waiting for git operations to stabilize...');
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Step 6: Verify the status is clean
+      const finalStatus = await git.status();
+      console.log(`Final status check: ${finalStatus.files.length} files remaining`);
+      
       return { 
         success: true, 
         filesChanged: status.files.length,
-        commitMessage 
+        commitMessage,
+        finalFileCount: finalStatus.files.length
       };
       
     } catch (error) {
