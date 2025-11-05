@@ -70,7 +70,10 @@ class GitManager {
   static async pullUpdates() {
     try {
       console.log('Pulling latest changes...');
-      await git.pull('origin', 'v4', ['--no-rebase', '--strategy-option=ours']);
+      // Get current branch name dynamically
+      const currentBranch = await git.revparse(['--abbrev-ref', 'HEAD']);
+      console.log(`Current branch: ${currentBranch}`);
+      await git.pull('origin', currentBranch, ['--no-rebase', '--strategy-option=ours']);
       return { success: true };
     } catch (error) {
       console.error('Git pull error:', error);
@@ -81,11 +84,14 @@ class GitManager {
   static async commitAndPush(message, author) {
     try {
       console.log(`Committing changes: ${message}`);
+      // Get current branch name dynamically
+      const currentBranch = await git.revparse(['--abbrev-ref', 'HEAD']);
+      console.log(`Pushing to origin/${currentBranch}`);
       await git.add('.');
       await git.commit(message, undefined, {
         '--author': `"${author}" <${author}@chaosmotic-wiki.local>`
       });
-      await git.push('origin', 'v4');
+      await git.push('origin', currentBranch);
       return { success: true };
     } catch (error) {
       console.error('Git commit/push error:', error);
@@ -133,9 +139,10 @@ class GitManager {
       });
       console.log(`Committed changes: ${commitMessage}`);
       
-      // Step 4: Push to origin v4
-      await git.push('origin', 'v4');
-      console.log('Pushed changes to origin/v4');
+      // Step 4: Push to current branch
+      const currentBranch = await git.revparse(['--abbrev-ref', 'HEAD']);
+      await git.push('origin', currentBranch);
+      console.log(`Pushed changes to origin/${currentBranch}`);
       
       // Step 5: Wait a moment for git operations to fully complete
       console.log('Waiting for git operations to stabilize...');
