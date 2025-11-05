@@ -227,12 +227,43 @@ The editor works seamlessly with your existing Quartz setup:
 
 1. **Content files** are saved directly to your `content/` directory
 2. **Git commits** are made automatically with proper attribution
-3. **Quartz build** can still be run normally: `npx quartz build --serve`
-4. **Students see changes** immediately in the editor preview
+3. **Quartz auto-updates** when files are saved through the web editor
+4. **Students see changes** in both the editor preview AND the live Quartz site
 
-You can run both systems simultaneously:
-- **Wiki editor** on port 3000 (for editing)
-- **Quartz preview** on port 8080 (for final review)
+### Running Both Systems Together
+
+**Option 1: Automatic startup (Recommended)**
+```bash
+# Windows
+start-both.bat
+
+# Mac/Linux
+chmod +x start-both.sh
+./start-both.sh
+```
+
+**Option 2: Manual startup**
+```bash
+# Terminal 1: Start Quartz
+npx quartz build --serve
+
+# Terminal 2: Start Wiki Editor
+cd wiki-editor
+npm start
+```
+
+**The complete workflow:**
+- **Port 3000**: Students edit in the web interface
+- **Port 8080**: Live Quartz site with automatic updates
+- **When students save**: Changes appear instantly in Quartz!
+
+### Live Preview Integration
+
+Students can:
+1. **Edit** in the web editor with markdown preview
+2. **Save** their work (auto-commits to git)
+3. **Click "Live Site"** to see their article in the actual Quartz wiki
+4. **Share the Quartz URL** with classmates to see the final result
 
 ## Support
 
