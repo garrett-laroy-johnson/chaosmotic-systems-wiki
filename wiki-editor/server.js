@@ -102,6 +102,52 @@ class GitManager {
       return [];
     }
   }
+
+  static async publishAllChanges(author) {
+    try {
+      console.log('Starting publish workflow...');
+      
+      // Step 1: Check git status
+      const status = await git.status();
+      const hasChanges = status.files.length > 0;
+      
+      if (!hasChanges) {
+        console.log('No changes to publish');
+        return { success: true, noChanges: true };
+      }
+      
+      console.log(`Found ${status.files.length} changed files to publish`);
+      
+      // Step 2: Add all changes (git add .)
+      await git.add('.');
+      console.log('Staged all changes');
+      
+      // Step 3: Commit with descriptive message
+      const timestamp = new Date().toLocaleString('en-US', {
+        dateStyle: 'medium',
+        timeStyle: 'short',
+      });
+      const commitMessage = `Publish changes by ${author} - ${timestamp}`;
+      await git.commit(commitMessage, undefined, {
+        '--author': `"${author}" <${author}@chaosmotic-wiki.local>`
+      });
+      console.log(`Committed changes: ${commitMessage}`);
+      
+      // Step 4: Push to origin v4
+      await git.push('origin', 'v4');
+      console.log('Pushed changes to origin/v4');
+      
+      return { 
+        success: true, 
+        filesChanged: status.files.length,
+        commitMessage 
+      };
+      
+    } catch (error) {
+      console.error('Publish workflow error:', error);
+      return { success: false, error: error.message };
+    }
+  }
 }
 
 // Link processing utilities
@@ -392,11 +438,58 @@ app.post('/api/sync', requireAuth, async (req, res) => {
   }
 });
 
+// Publish route - automates the entire "Publishing Your Changes" workflow
+app.post('/api/publish', requireAuth, async (req, res) => {
+  try {
+    const author = req.session.user.displayName;
+    
+    // This replicates the manual workflow:
+    // 1. git status (check for changes)
+    // 2. git add . (stage all changes)  
+    // 3. git commit -m "message" (commit with message)
+    // 4. git push origin v4 (push to share)
+    
+    const result = await GitManager.publishAllChanges(author);
+    
+    if (result.success) {
+      if (result.noChanges) {
+        res.json({ message: 'No changes to publish - everything is already up to date!' });
+      } else {
+        res.json({ 
+          message: 'All changes published successfully!',
+          filesChanged: result.filesChanged || 0
+        });
+      }
+    } else {
+      res.status(500).json({ error: 'Failed to publish changes: ' + result.error });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // File history route
 app.get('/api/files/:filename/history', requireAuth, async (req, res) => {
   try {
     const history = await GitManager.getFileHistory(req.params.filename);
     res.json({ history });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Check git status for unpublished changes
+app.get('/api/git-status', requireAuth, async (req, res) => {
+  try {
+    const status = await git.status();
+    res.json({ 
+      hasChanges: status.files.length > 0,
+      changedFiles: status.files.length,
+      files: status.files.map(f => ({
+        path: f.path,
+        status: f.index + f.working_dir
+      }))
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
