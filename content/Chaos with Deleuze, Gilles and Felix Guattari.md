@@ -1,3 +1,7 @@
+---
+title: Chaos with Deleuze, Gilles and Felix Guattari
+---
+
 ### **Chaos**
 
 [[Chaosmos with Prigogyne, Ilya and Isabelle Stengers]]
@@ -15,7 +19,7 @@
 '
 2. **Chaos in the _Deleuze and Guattari Dictionary_ (“Chaos,” “Chaosmosis,” and “Chaosophy”):**
 
-• **Chaosmosis:** A term coined by Guattari to describe the dynamic process by which order arises from chaos through creative and experimental practices.
+• **Chaosmosis:** A term coined by [[Felix Guattari]] to describe the dynamic process by which order arises from chaos through creative and experimental practices.
 
 • **Chaosophy:** The philosophy of engaging with chaos as a productive force, emphasizing **multiplicity and the breakdown of hierarchical systems. It invites us to think beyond binaries and fixed categories.**
 
