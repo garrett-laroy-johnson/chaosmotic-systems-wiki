@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "setup": "node setup.js"
+    "setup": "node setup.js",
+    "build": "echo 'No build step required'",
+    "deploy": "echo 'Ready for deployment'"
   },
   "dependencies": {
     "express": "^4.18.2",
@@ -15,10 +17,13 @@
     "multer": "^1.4.5-lts.1",
     "simple-git": "^3.20.0",
     "chokidar": "^3.5.3",
-    "ws": "^8.14.2",
     "marked": "^9.1.6",
     "gray-matter": "^4.0.3",
-    "express-rate-limit": "^7.1.5"
+    "express-rate-limit": "^7.1.5",
+    "passport": "^0.7.0",
+    "passport-github2": "^0.1.12",
+    "dotenv": "^16.3.1",
+    "@octokit/rest": "^20.0.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"

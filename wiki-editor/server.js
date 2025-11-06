@@ -693,9 +693,47 @@ app.use((error, req, res, next) => {
 async function startServer() {
   await loadUsers();
   
-  // Initial git pull
-  console.log('Performing initial git sync...');
-  await GitManager.pullUpdates();
+  // Ensure content directory exists
+  try {
+    await fs.access(CONTENT_DIR);
+  } catch (error) {
+    console.log('Content directory not found, creating it...');
+    await fs.mkdir(CONTENT_DIR, { recursive: true });
+    // Create a sample file for production environments
+    if (process.env.NODE_ENV === 'production') {
+      const sampleContent = `# Welcome to Chaosmotic Systems Wiki
+
+This is a collaborative wiki for the Chaosmotic Systems class.
+
+## Getting Started
+
+In development mode, this wiki syncs with the GitHub repository. In production mode, you can create and edit content directly through the web interface.
+
+## Notes
+
+- Use [[link]] syntax to create wiki-style links
+- Markdown formatting is supported
+- Files are automatically saved and can be published to GitHub
+
+## Access
+
+Only members of the Chaosmotic-Systems GitHub organization can access and edit this wiki.
+`;
+      await fs.writeFile(path.join(CONTENT_DIR, 'index.md'), sampleContent);
+    }
+  }
+  
+  // Initial git pull (skip in production Railway environment)
+  if (process.env.NODE_ENV !== 'production' || process.env.RAILWAY_ENVIRONMENT !== 'production') {
+    try {
+      console.log('Performing initial git sync...');
+      await GitManager.pullUpdates();
+    } catch (error) {
+      console.warn('Git sync failed (this is expected in serverless environments):', error.message);
+    }
+  } else {
+    console.log('Skipping git operations in production environment');
+  }
   
   app.listen(PORT, () => {
     console.log(`Chaosmotic Wiki Editor running on http://localhost:${PORT}`);
