@@ -19,7 +19,7 @@
     "test": "tsx ./quartz/util/path.test.ts && tsx ./quartz/depgraph.test.ts",
     "profile": "0x -D prof ./quartz/bootstrap-cli.mjs build --concurrency=1",
     "wiki-editor": "cd wiki-editor && npm install && npm start",
-    "start": "cd wiki-editor && npm install && npm start",
+    "start": "cd wiki-editor && npm install && node test-server.js",
     "build": "cd wiki-editor && npm install"
   },
   "engines": {
