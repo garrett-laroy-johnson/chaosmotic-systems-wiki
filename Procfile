@@ -1,0 +1,1 @@
+web: cd wiki-editor && node test-server.js
