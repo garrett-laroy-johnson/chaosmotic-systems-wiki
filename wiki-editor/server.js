@@ -7,8 +7,11 @@ const path = require('path');
 const matter = require('gray-matter');
 const { marked } = require('marked');
 const chokidar = require('chokidar');
-const WebSocket = require('ws');
 const rateLimit = require('express-rate-limit');
+const passport = require('passport');
+const GitHubStrategy = require('passport-github2').Strategy;
+const { Octokit } = require('@octokit/rest');
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -30,8 +33,108 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'chaosmotic-wiki-secret-change-in-production',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 hours
+  cookie: { 
+    secure: process.env.NODE_ENV === 'production', // HTTPS in production
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    httpOnly: true,
+    sameSite: 'lax'
+  }
 }));
+
+// Passport configuration
+app.use(passport.initialize());
+app.use(passport.session());
+
+// GitHub OAuth Strategy
+passport.use(new GitHubStrategy({
+  clientID: process.env.GITHUB_CLIENT_ID,
+  clientSecret: process.env.GITHUB_CLIENT_SECRET,
+  callbackURL: "/auth/github/callback"
+}, async (accessToken, refreshToken, profile, done) => {
+  try {
+    // Check if user has access to the organization/team
+    const hasAccess = await checkGitHubAccess(profile.username, accessToken);
+    
+    if (!hasAccess) {
+      console.log(`Access denied for GitHub user: ${profile.username} - not a member of ${process.env.ALLOWED_GITHUB_ORG}`);
+      return done(null, false, { message: 'Access denied: You must be a member of the class organization' });
+    }
+    
+    // Create or update user based on GitHub profile
+    const user = {
+      id: profile.id,
+      username: profile.username,
+      displayName: profile.displayName || profile.username,
+      email: profile.emails?.[0]?.value,
+      avatarUrl: profile.photos?.[0]?.value,
+      githubToken: accessToken,
+      authMethod: 'github'
+    };
+    
+    console.log(`GitHub OAuth: ${user.username} (${user.displayName}) authenticated and authorized`);
+    return done(null, user);
+  } catch (error) {
+    console.error('GitHub OAuth error:', error);
+    return done(error, null);
+  }
+}));
+
+// Function to check GitHub organization/team membership
+async function checkGitHubAccess(username, accessToken) {
+  try {
+    const octokit = new Octokit({ auth: accessToken });
+    const allowedOrg = process.env.ALLOWED_GITHUB_ORG;
+    const allowedTeam = process.env.ALLOWED_GITHUB_TEAM;
+    
+    if (!allowedOrg) {
+      console.log('No organization restriction configured - allowing all GitHub users');
+      return true;
+    }
+    
+    // Check organization membership
+    try {
+      await octokit.rest.orgs.checkMembershipForUser({
+        org: allowedOrg,
+        username: username
+      });
+      console.log(`✅ ${username} is a member of ${allowedOrg}`);
+      
+      // If specific team is required, check team membership
+      if (allowedTeam) {
+        try {
+          await octokit.rest.teams.getMembershipForUserInOrg({
+            org: allowedOrg,
+            team_slug: allowedTeam,
+            username: username
+          });
+          console.log(`✅ ${username} is a member of team ${allowedTeam}`);
+          return true;
+        } catch (teamError) {
+          console.log(`❌ ${username} is not a member of team ${allowedTeam}`);
+          return false;
+        }
+      }
+      
+      return true;
+    } catch (orgError) {
+      console.log(`❌ ${username} is not a member of ${allowedOrg}`);
+      return false;
+    }
+    
+  } catch (error) {
+    console.error('Error checking GitHub access:', error);
+    return false;
+  }
+}
+
+// Passport serialization
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
 
 // Simple user store (in production, use a proper database)
 const users = new Map();
@@ -369,6 +472,30 @@ class FileManager {
 }
 
 // Routes
+
+// GitHub OAuth routes
+app.get('/auth/github', passport.authenticate('github', { scope: ['user:email', 'repo'] }));
+
+app.get('/auth/github/callback', 
+  passport.authenticate('github', { 
+    failureRedirect: '/?error=access_denied',
+    failureMessage: true
+  }),
+  (req, res) => {
+    // Successful authentication and authorization
+    req.session.user = {
+      username: req.user.username,
+      displayName: req.user.displayName,
+      email: req.user.email,
+      avatarUrl: req.user.avatarUrl,
+      githubToken: req.user.githubToken,
+      authMethod: 'github'
+    };
+    
+    console.log(`User ${req.user.username} logged in via GitHub`);
+    res.redirect('/');
+  }
+);
 
 // Authentication routes
 app.post('/api/login', async (req, res) => {
