@@ -18,6 +18,104 @@ const PORT = process.env.PORT || 3000;
 const CONTENT_DIR = path.join(__dirname, '../content');
 const git = simpleGit();
 
+// GitHub API manager for direct commits when git is not available
+class GitHubAPIManager {
+  static async commitFilesToGitHub(files, message, author) {
+    try {
+      // Check for GitHub token
+      const githubToken = process.env.GITHUB_TOKEN;
+      if (!githubToken) {
+        console.error('❌ GITHUB_TOKEN environment variable not set - cannot commit to GitHub');
+        return { 
+          success: false, 
+          error: 'GitHub token not configured. Please set GITHUB_TOKEN environment variable.' 
+        };
+      }
+
+      const octokit = new Octokit({
+        auth: githubToken
+      });
+
+      const owner = 'Chaosmotic-Systems';
+      const repo = 'chaosmotic-systems-wiki';
+      const branch = 'app-dev';
+
+      console.log(`📤 Committing ${files.length} files to GitHub via API...`);
+
+      // Get the current commit SHA
+      const { data: refData } = await octokit.rest.git.getRef({
+        owner,
+        repo,
+        ref: `heads/${branch}`
+      });
+      const currentCommitSha = refData.object.sha;
+
+      // Get the current tree
+      const { data: currentCommit } = await octokit.rest.git.getCommit({
+        owner,
+        repo,
+        commit_sha: currentCommitSha
+      });
+      const currentTreeSha = currentCommit.tree.sha;
+
+      // Create tree with file changes
+      const tree = [];
+      for (const file of files) {
+        const content = await fs.readFile(file.path, 'utf8');
+        const blob = await octokit.rest.git.createBlob({
+          owner,
+          repo,
+          content: Buffer.from(content).toString('base64'),
+          encoding: 'base64'
+        });
+
+        tree.push({
+          path: file.relativePath, // e.g., 'content/new-file.md'
+          mode: '100644',
+          type: 'blob',
+          sha: blob.data.sha
+        });
+      }
+
+      // Create new tree
+      const { data: newTree } = await octokit.rest.git.createTree({
+        owner,
+        repo,
+        base_tree: currentTreeSha,
+        tree
+      });
+
+      // Create commit
+      const { data: newCommit } = await octokit.rest.git.createCommit({
+        owner,
+        repo,
+        message,
+        tree: newTree.sha,
+        parents: [currentCommitSha],
+        author: {
+          name: author,
+          email: `${author}@chaosmotic-wiki.local`
+        }
+      });
+
+      // Update branch reference
+      await octokit.rest.git.updateRef({
+        owner,
+        repo,
+        ref: `heads/${branch}`,
+        sha: newCommit.sha
+      });
+
+      console.log(`✅ Successfully committed to GitHub: ${newCommit.sha}`);
+      return { success: true, commitSha: newCommit.sha, message, method: 'github-api' };
+
+    } catch (error) {
+      console.error('❌ GitHub API commit error:', error);
+      return { success: false, error: error.message };
+    }
+  }
+}
+
 // Trust Railway's proxy for proper IP detection
 app.set('trust proxy', true);
 
@@ -274,13 +372,28 @@ class GitManager {
     }
   }
 
-  static async commitAndPush(message, author) {
+  static async commitAndPush(message, author, filePath = null) {
     try {
       const isRepo = await GitManager.isGitRepository();
       if (!isRepo) {
         console.log('Not a git repository - using GitHub API fallback for commits');
-        // TODO: Implement GitHub API commit fallback
-        return { success: true, skipped: true, reason: 'No git repository - used GitHub API' };
+        
+        // Prepare files for GitHub API commit
+        const files = [];
+        if (filePath) {
+          // Single file commit
+          const relativePath = path.relative(path.join(__dirname, '..'), filePath);
+          files.push({
+            path: filePath,
+            relativePath: relativePath.replace(/\\/g, '/') // Normalize path separators
+          });
+        } else {
+          // For now, we'll handle single file commits. Multi-file commits would need more logic.
+          console.log('Multi-file GitHub API commits not implemented yet');
+          return { success: true, skipped: true, reason: 'Multi-file GitHub API commits not implemented' };
+        }
+        
+        return await GitHubAPIManager.commitFilesToGitHub(files, message, author);
       }
 
       console.log(`Committing changes: ${message}`);
@@ -555,7 +668,7 @@ class FileManager {
       
       // Auto-commit the main file
       const commitMessage = `Update ${filename} by ${author}`;
-      const result = await GitManager.commitAndPush(commitMessage, author);
+      const result = await GitManager.commitAndPush(commitMessage, author, filePath);
       
       // Return result with info about created files
       return {
