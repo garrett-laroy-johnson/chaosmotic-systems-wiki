@@ -2,6 +2,7 @@
 .gitignore
 node_modules
 public
+!wiki-editor/public
 prof
 tsconfig.tsbuildinfo
 .obsidian

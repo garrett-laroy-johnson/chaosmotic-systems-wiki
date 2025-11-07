@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chaosmotic Systems Wiki Editor</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Login Screen -->
+        <div id="login-screen" class="screen">
+            <div class="login-container">
+                <div class="login-header">
+                    <h1>✦ Chaosmotic Systems Wiki ✦</h1>
+                    <p>Collaborative Knowledge Garden</p>
+                </div>
+                <form id="login-form" class="login-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Enter</button>
+                    <div id="login-error" class="error-message"></div>
+                    
+                    <div class="login-divider">
+                        <span>or</span>
+                    </div>
+                    
+                    <a href="/auth/github" class="btn btn-github">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+                        </svg>
+                        Continue with GitHub
+                    </a>
+                </form>
+            </div>
+        </div>
+
+        <!-- Main Editor Screen -->
+        <div id="editor-screen" class="screen hidden">
+            <header class="app-header">
+                <div class="header-left">
+                    <h1>✦ Chaosmotic Wiki</h1>
+                    <span id="current-user" class="user-info"></span>
+                    <div class="publish-status-container">
+                        <span id="publish-status" class="publish-status hidden">● Changes ready to publish</span>
+                        <div id="publish-status-dropdown" class="publish-status-dropdown hidden">
+                            <div class="dropdown-header">Files ready to publish:</div>
+                            <ul id="pending-files-list" class="pending-files-list">
+                                <!-- Pending files will be listed here -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button id="sync-btn" class="btn btn-secondary" title="Synchronize your computer with changes on the server">🔄 Sync</button>
+                    <button id="publish-btn" class="btn btn-success" title="Publish all your changes to share with the class">📤 Publish</button>
+                    <button id="logout-btn" class="btn btn-outline">Logout</button>
+                </div>
+            </header>
+
+            <div class="main-container">
+                <!-- File Sidebar -->
+                <aside class="sidebar">
+                    <div class="sidebar-header">
+                        <h3>📚 Articles</h3>
+                        <button id="new-file-btn" class="btn btn-small">+ New</button>
+                    </div>
+                    <div class="file-list" id="file-list">
+                        <!-- Files will be loaded here -->
+                    </div>
+                </aside>
+
+                <!-- Editor Area -->
+                <main class="editor-main">
+                    <div id="welcome-screen" class="welcome">
+                        <h2>Welcome to the Chaosmotic Systems Wiki</h2>
+                        <p>Select an article from the sidebar to start editing, or create a new one.</p>
+                        
+                        <div class="welcome-help">
+                            <h3>✨ Magic Wiki Links</h3>
+                            <p>When you write <code>[[Page Name]]</code> in your articles, we automatically create that page for you! Just like Obsidian.</p>
+                            <div class="help-examples">
+                                <div class="help-example">
+                                    <strong>Type:</strong> <code>See [[Cybernetics]] for more info</code><br>
+                                    <strong>Result:</strong> Creates "cybernetics.md" automatically!
+                                </div>
+                                <div class="help-example">
+                                    <strong>Type:</strong> <code>[[Norbert Wiener|the founder]]</code><br>
+                                    <strong>Result:</strong> Creates "norbert-wiener.md", displays as "the founder"
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="welcome-stats">
+                            <div class="stat">
+                                <span class="stat-number" id="total-files">0</span>
+                                <span class="stat-label">Articles</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="editor-container" class="hidden">
+                        <div class="editor-header">
+                            <input type="text" id="file-title" class="file-title-input" placeholder="Article Title">
+                            <div class="editor-controls">
+                                <button id="save-btn" class="btn btn-primary">💾 Save</button>
+                                <button id="preview-toggle" class="btn btn-secondary">👁️ Preview</button>
+                                <button id="live-preview-btn" class="btn btn-secondary">🌐 Live Site</button>
+                                <button id="delete-btn" class="btn btn-danger">🗑️ Delete</button>
+                            </div>
+                        </div>
+
+                        <div class="editor-content">
+                            <div class="editor-pane">
+                                <div class="editor-toolbar">
+                                    <button class="tool-btn" data-action="bold">**B**</button>
+                                    <button class="tool-btn" data-action="italic">*I*</button>
+                                    <button class="tool-btn" data-action="heading">H1</button>
+                                    <button class="tool-btn" data-action="wikilink">[[Link]]</button>
+                                    <button class="tool-btn" data-action="link">🔗 URL</button>
+                                    <button class="tool-btn" data-action="list">• List</button>
+                                </div>
+                                <textarea id="editor" class="markdown-editor" placeholder="Start writing your article in Markdown...
+
+# Your Article Title
+
+Write your content here. You can use:
+
+- **Bold text**
+- *Italic text*
+- [[Wiki Links]] (creates new pages automatically!)
+- [Regular links](http://example.com)
+- Lists and more!
+
+The preview will update as you type."></textarea>
+                            </div>
+
+                            <div class="preview-pane hidden" id="preview-pane">
+                                <div class="preview-content" id="preview-content">
+                                    <p class="preview-placeholder">Preview will appear here...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- New File Modal -->
+    <div id="new-file-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Create New Article</h3>
+            <form id="new-file-form">
+                <div class="form-group">
+                    <label for="new-filename">Filename (without .md)</label>
+                    <input type="text" id="new-filename" required placeholder="my-article">
+                </div>
+                <div class="form-group">
+                    <label for="new-title">Article Title</label>
+                    <input type="text" id="new-title" required placeholder="My Article">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('new-file-modal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Article</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="spinner"></div>
+        <p>Processing...</p>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

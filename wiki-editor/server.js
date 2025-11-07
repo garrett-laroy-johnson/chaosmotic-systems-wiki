@@ -18,6 +18,9 @@ const PORT = process.env.PORT || 3000;
 const CONTENT_DIR = path.join(__dirname, '../content');
 const git = simpleGit();
 
+// Trust Railway's proxy for proper IP detection
+app.set('trust proxy', true);
+
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
