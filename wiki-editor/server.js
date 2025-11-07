@@ -147,6 +147,22 @@ async function checkGitHubAccess(username, accessToken) {
       } else {
         console.log(`❌ ${username} is not a member of ${allowedOrg} (organization not found in user's org list)`);
         
+        // Check if user is an owner of the organization
+        console.log(`🔄 Checking if user is an owner/admin of ${allowedOrg}...`);
+        try {
+          const { data: membership } = await octokit.rest.orgs.getMembershipForAuthenticatedUser({
+            org: allowedOrg
+          });
+          console.log(`🔍 Membership check result:`, membership);
+          
+          if (membership.role === 'admin' || membership.state === 'active') {
+            console.log(`✅ ${username} has admin access or active membership in ${allowedOrg}`);
+            return true;
+          }
+        } catch (membershipError) {
+          console.log(`⚠️ Could not check membership for authenticated user:`, membershipError.message);
+        }
+        
         // Fallback: try public membership check
         console.log(`🔄 Trying public membership check as fallback...`);
         try {
