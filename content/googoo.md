@@ -4,6 +4,9 @@ title: googoo test test
 
 
 
+
 # googoo
 
-Write your article content here...
+or i can write that in here like so using the markdown syntax 
+
+
