@@ -160,6 +160,17 @@ body {
   border-color: #059669;
 }
 
+.btn-info {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.btn-info:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
 .btn-warning {
   background: var(--warning-color);
   color: white;
