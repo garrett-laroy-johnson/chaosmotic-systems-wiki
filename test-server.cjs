@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 3001; // Changed default to match Railway
+const PORT = process.env.PORT || 3000; // Keep original default
 
 console.log('=== SERVER STARTUP DEBUG ===');
 console.log('Starting server with the following configuration:');
