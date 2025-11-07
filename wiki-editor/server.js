@@ -24,7 +24,19 @@ app.set('trust proxy', true);
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+  max: 100, // limit each IP to 100 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+  // Use a custom key generator for Railway that handles X-Forwarded-For properly
+  keyGenerator: (req, res) => {
+    // In Railway, use the rightmost IP from X-Forwarded-For header
+    const forwardedFor = req.get('X-Forwarded-For');
+    if (forwardedFor) {
+      const ips = forwardedFor.split(',').map(ip => ip.trim());
+      return ips[ips.length - 1]; // Use the rightmost (original client) IP
+    }
+    return req.ip;
+  }
 });
 
 // Middleware
@@ -96,71 +108,70 @@ async function checkGitHubAccess(username, accessToken) {
     
     console.log(`🔍 Checking access for ${username} to organization ${allowedOrg}`);
     
-    // Check if user is an organization owner first
+    // Use the authenticated user's token to check their own membership
+    // This works for both public and private memberships
     try {
-      const { data: org } = await octokit.rest.orgs.get({ org: allowedOrg });
-      console.log(`📋 Organization ${allowedOrg} found, checking ownership and membership...`);
+      const { data: userOrgs } = await octokit.rest.orgs.listForAuthenticatedUser({
+        per_page: 100
+      });
       
-      // Get organization members (this includes owners)
-      try {
-        const { data: members } = await octokit.rest.orgs.listMembers({
-          org: allowedOrg,
-          per_page: 100
-        });
+      console.log(`📋 Found ${userOrgs.length} organizations for authenticated user`);
+      const isMemberOfOrg = userOrgs.some(org => org.login.toLowerCase() === allowedOrg.toLowerCase());
+      
+      if (isMemberOfOrg) {
+        console.log(`✅ ${username} is a member of ${allowedOrg} (verified via authenticated user API)`);
         
-        const isMember = members.some(member => member.login.toLowerCase() === username.toLowerCase());
-        
-        if (isMember) {
-          console.log(`✅ ${username} is a member of ${allowedOrg}`);
-          
-          // If specific team is required, check team membership
-          if (allowedTeam) {
-            try {
-              await octokit.rest.teams.getMembershipForUserInOrg({
-                org: allowedOrg,
-                team_slug: allowedTeam,
-                username: username
-              });
-              console.log(`✅ ${username} is a member of team ${allowedTeam}`);
-              return true;
-            } catch (teamError) {
-              console.log(`❌ ${username} is not a member of team ${allowedTeam}`);
-              return false;
-            }
+        // If specific team is required, check team membership
+        if (allowedTeam) {
+          try {
+            await octokit.rest.teams.getMembershipForUserInOrg({
+              org: allowedOrg,
+              team_slug: allowedTeam,
+              username: username
+            });
+            console.log(`✅ ${username} is a member of team ${allowedTeam}`);
+            return true;
+          } catch (teamError) {
+            console.log(`❌ ${username} is not a member of team ${allowedTeam}:`, teamError.message);
+            return false;
           }
-          
-          return true;
         }
         
-        // Fallback: try the direct membership check
-        console.log(`🔄 Direct member list check failed, trying membership API...`);
-        await octokit.rest.orgs.checkMembershipForUser({
-          org: allowedOrg,
-          username: username
-        });
-        console.log(`✅ ${username} confirmed as member via membership API`);
         return true;
+      } else {
+        console.log(`❌ ${username} is not a member of ${allowedOrg} (organization not found in user's org list)`);
         
-      } catch (memberListError) {
-        console.log(`⚠️ Could not list members (possibly private org), trying membership check...`);
-        
-        // Try direct membership check as fallback
+        // Fallback: try public membership check
+        console.log(`🔄 Trying public membership check as fallback...`);
         try {
           await octokit.rest.orgs.checkMembershipForUser({
             org: allowedOrg,
             username: username
           });
-          console.log(`✅ ${username} is a member of ${allowedOrg} (via direct check)`);
+          console.log(`✅ ${username} is a public member of ${allowedOrg}`);
           return true;
-        } catch (membershipError) {
-          console.log(`❌ ${username} is not a member of ${allowedOrg}:`, membershipError.message);
+        } catch (publicCheckError) {
+          console.log(`❌ ${username} is not a public member of ${allowedOrg}:`, publicCheckError.message);
           return false;
         }
       }
       
-    } catch (orgError) {
-      console.log(`❌ Error accessing organization ${allowedOrg}:`, orgError.message);
-      return false;
+    } catch (userOrgsError) {
+      console.log(`⚠️ Could not list user organizations:`, userOrgsError.message);
+      
+      // Fallback to the original approach
+      console.log(`🔄 Falling back to public organization check...`);
+      try {
+        await octokit.rest.orgs.checkMembershipForUser({
+          org: allowedOrg,
+          username: username
+        });
+        console.log(`✅ ${username} is a public member of ${allowedOrg}`);
+        return true;
+      } catch (fallbackError) {
+        console.log(`❌ Final check failed - ${username} cannot access ${allowedOrg}:`, fallbackError.message);
+        return false;
+      }
     }
     
   } catch (error) {
