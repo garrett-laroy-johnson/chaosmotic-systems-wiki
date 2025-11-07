@@ -6,7 +6,16 @@ console.log('=== SERVER STARTUP DEBUG ===');
 console.log('Starting server with the following configuration:');
 console.log('PORT:', PORT);
 console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('RAILWAY_PUBLIC_DOMAIN:', process.env.RAILWAY_PUBLIC_DOMAIN);
+console.log('RAILWAY_PRIVATE_DOMAIN:', process.env.RAILWAY_PRIVATE_DOMAIN);
 console.log('All environment variables:', Object.keys(process.env).filter(key => key.includes('PORT') || key.includes('RAILWAY')));
+
+// Railway specific middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Trust Railway's proxy
+app.set('trust proxy', true);
 
 // Log all incoming requests
 app.use((req, res, next) => {
@@ -14,6 +23,8 @@ app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
   console.log('Headers:', JSON.stringify(req.headers, null, 2));
   console.log('Remote IP:', req.ip || req.connection.remoteAddress);
+  console.log('X-Forwarded-For:', req.get('X-Forwarded-For'));
+  console.log('X-Real-IP:', req.get('X-Real-IP'));
   next();
 });
 
@@ -29,6 +40,28 @@ app.use((req, res, next) => {
   next();
 });
 
+// Railway health check endpoint (Railway might check this automatically)
+app.get('/healthz', (req, res) => {
+  console.log('=== RAILWAY HEALTH CHECK HIT ===');
+  res.status(200).json({ 
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    service: 'chaosmotic-wiki-editor'
+  });
+});
+
+// Standard health check
+app.get('/health', (req, res) => {
+  console.log('=== HEALTH CHECK HIT ===');
+  res.status(200).json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(), 
+    port: PORT,
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV
+  });
+});
+
 // Very basic test endpoint
 app.get('/', (req, res) => {
   console.log('=== ROOT ENDPOINT HIT ===');
@@ -40,17 +73,9 @@ app.get('/', (req, res) => {
     <p>Host header: ${req.get('host')}</p>
     <p>User agent: ${req.get('user-agent')}</p>
     <p>Remote IP: ${req.ip || req.connection.remoteAddress}</p>
+    <p>Railway Public Domain: ${process.env.RAILWAY_PUBLIC_DOMAIN || 'not set'}</p>
+    <p>Railway Private Domain: ${process.env.RAILWAY_PRIVATE_DOMAIN || 'not set'}</p>
   `);
-});
-
-app.get('/health', (req, res) => {
-  console.log('=== HEALTH CHECK HIT ===');
-  res.status(200).json({ 
-    status: 'ok', 
-    timestamp: new Date().toISOString(), 
-    port: PORT,
-    uptime: process.uptime()
-  });
 });
 
 // Catch all other routes
@@ -60,7 +85,7 @@ app.use('*', (req, res) => {
     <h1>404 - Not Found</h1>
     <p>Path: ${req.originalUrl}</p>
     <p>Method: ${req.method}</p>
-    <p>Available endpoints: / and /health</p>
+    <p>Available endpoints: /, /health, /healthz</p>
   `);
 });
 
@@ -77,6 +102,31 @@ const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server should be accessible at http://0.0.0.0:${PORT}`);
   console.log(`Process PID: ${process.pid}`);
   console.log(`Node version: ${process.version}`);
+  
+  // Send a test request to ourselves to verify the server is responding
+  setTimeout(() => {
+    console.log('=== SELF TEST ===');
+    const http = require('http');
+    const options = {
+      hostname: '127.0.0.1',
+      port: PORT,
+      path: '/health',
+      method: 'GET'
+    };
+    
+    const req = http.request(options, (res) => {
+      console.log(`Self-test response status: ${res.statusCode}`);
+      res.on('data', (chunk) => {
+        console.log(`Self-test response: ${chunk}`);
+      });
+    });
+    
+    req.on('error', (e) => {
+      console.log(`Self-test error: ${e.message}`);
+    });
+    
+    req.end();
+  }, 2000);
 });
 
 // Handle server errors
