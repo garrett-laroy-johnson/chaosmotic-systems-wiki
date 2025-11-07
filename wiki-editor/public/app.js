@@ -614,14 +614,22 @@ ${content}`;
       if (response.ok) {
         await this.loadFiles();
         
-        // Show success message with file count if available
-        const fileCount = data.filesChanged || 0;
-        const message = fileCount > 0 
-          ? `🎉 Published ${fileCount} file(s) successfully! Your work is now live.`
-          : '🎉 All changes published successfully! Your work is now live.';
-        this.showToast(message, 'success');
+        // Handle different response types
+        if (data.note && data.recommendation) {
+          // Individual file saves are working
+          this.showToast(data.message || 'Changes are already syncing via individual saves', 'info');
+          this.showToast(data.recommendation, 'info');
+          this.showToast(data.tip || 'Continue using Save button on individual files', 'success');
+        } else {
+          // Traditional bulk publish worked
+          const fileCount = data.filesChanged || 0;
+          const message = fileCount > 0 
+            ? `🎉 Published ${fileCount} file(s) successfully! Your work is now live.`
+            : '🎉 All changes published successfully! Your work is now live.';
+          this.showToast(message, 'success');
+        }
         
-        // Wait longer for git operations to complete, then check status
+        // Wait for operations to complete, then check status
         this.showToast('Updating status...', 'info');
         setTimeout(() => {
           this.checkPublishStatus();

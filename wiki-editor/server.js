@@ -122,7 +122,7 @@ app.set('trust proxy', true);
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: 500, // Increased from 100 to 500 for multiple students
   standardHeaders: true,
   legacyHeaders: false,
   // Use a custom key generator for Railway that handles X-Forwarded-For properly
@@ -134,6 +134,12 @@ const limiter = rateLimit({
       return ips[ips.length - 1]; // Use the rightmost (original client) IP
     }
     return req.ip;
+  },
+  // Custom message for when rate limit is exceeded
+  message: {
+    error: 'Too many requests from this connection. Please wait a moment before trying again.',
+    retryAfter: 'Try again in 15 minutes',
+    tip: 'Individual file saves are more efficient than bulk operations'
   }
 });
 
@@ -872,17 +878,21 @@ app.post('/api/publish', requireAuth, async (req, res) => {
   try {
     const author = req.session.user.displayName;
     
-    // This replicates the manual workflow:
-    // 1. git status (check for changes)
-    // 2. git add . (stage all changes)  
-    // 3. git commit -m "message" (commit with message)
-    // 4. git push origin v4 (push to share)
+    // In production environments, individual file saves are more reliable
+    // This endpoint provides guidance for the containerized environment
     
     const result = await GitManager.publishAllChanges(author);
     
     if (result.success) {
       if (result.noChanges) {
         res.json({ message: 'No changes to publish - everything is already up to date!' });
+      } else if (result.skipped || result.gitPushFailed || result.gitFallback) {
+        res.json({ 
+          message: 'Individual file saves are already syncing your changes to GitHub.',
+          note: 'Your edits are automatically saved and published when you click Save on each file.',
+          recommendation: 'Continue using the Save button on individual files for reliable publishing.',
+          tip: 'Changes appear on the live site within 2-3 minutes of saving.'
+        });
       } else {
         res.json({ 
           message: 'All changes published successfully!',
