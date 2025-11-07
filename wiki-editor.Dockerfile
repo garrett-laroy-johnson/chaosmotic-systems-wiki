@@ -7,18 +7,16 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /usr/src/app
 
-# Copy package files
-COPY wiki-editor/package*.json ./
-
-# Install dependencies
-RUN npm ci
-
-# Copy the entire repository content (needed for git operations)
+# Copy the entire repository first (needed for git operations)
 COPY . ./
 
-# Set up git configuration (will be overridden by environment variables)
+# Set up git configuration
 RUN git config --global user.email "wiki@chaosmotic-systems.app" && \
     git config --global user.name "Chaosmotic Wiki"
+
+# Change to wiki-editor directory and install dependencies
+WORKDIR /usr/src/app/wiki-editor
+RUN npm ci
 
 # Create content directory if it doesn't exist
 RUN mkdir -p content
@@ -26,5 +24,5 @@ RUN mkdir -p content
 # Expose port
 EXPOSE 8080
 
-# Start the application
+# Start the wiki-editor application
 CMD ["npm", "start"]
