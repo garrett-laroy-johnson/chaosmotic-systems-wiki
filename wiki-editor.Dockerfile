@@ -7,12 +7,20 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /usr/src/app
 
-# Copy the entire repository first (needed for git operations)
+# Copy the entire repository (including .git directory)
 COPY . ./
 
 # Set up git configuration
 RUN git config --global user.email "wiki@chaosmotic-systems.app" && \
-    git config --global user.name "Chaosmotic Wiki"
+    git config --global user.name "Chaosmotic Wiki" && \
+    git config --global init.defaultBranch main
+
+# Initialize git repository if .git doesn't exist and set up remote
+RUN if [ ! -d ".git" ]; then \
+        git init && \
+        git remote add origin https://github.com/Chaosmotic-Systems/chaosmotic-systems-wiki.git && \
+        git branch -M app-dev; \
+    fi
 
 # Change to wiki-editor directory and install dependencies
 WORKDIR /usr/src/app/wiki-editor

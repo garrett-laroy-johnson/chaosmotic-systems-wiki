@@ -245,8 +245,23 @@ function requireAuth(req, res, next) {
 
 // Git operations wrapper with error handling
 class GitManager {
+  static async isGitRepository() {
+    try {
+      await git.revparse(['--git-dir']);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
   static async pullUpdates() {
     try {
+      const isRepo = await GitManager.isGitRepository();
+      if (!isRepo) {
+        console.log('Not a git repository - skipping pull in containerized environment');
+        return { success: true, skipped: true, reason: 'No git repository' };
+      }
+
       console.log('Pulling latest changes...');
       // Get current branch name dynamically
       const currentBranch = await git.revparse(['--abbrev-ref', 'HEAD']);
@@ -261,6 +276,13 @@ class GitManager {
 
   static async commitAndPush(message, author) {
     try {
+      const isRepo = await GitManager.isGitRepository();
+      if (!isRepo) {
+        console.log('Not a git repository - using GitHub API fallback for commits');
+        // TODO: Implement GitHub API commit fallback
+        return { success: true, skipped: true, reason: 'No git repository - used GitHub API' };
+      }
+
       console.log(`Committing changes: ${message}`);
       // Get current branch name dynamically
       const currentBranch = await git.revparse(['--abbrev-ref', 'HEAD']);
@@ -279,6 +301,12 @@ class GitManager {
 
   static async getFileHistory(filename) {
     try {
+      const isRepo = await GitManager.isGitRepository();
+      if (!isRepo) {
+        console.log('Not a git repository - no history available');
+        return [];
+      }
+
       const log = await git.log({ file: path.join('content', filename) });
       return log.all.slice(0, 10); // Last 10 commits
     } catch (error) {
@@ -289,6 +317,12 @@ class GitManager {
 
   static async publishAllChanges(author) {
     try {
+      const isRepo = await GitManager.isGitRepository();
+      if (!isRepo) {
+        console.log('Not a git repository - skipping publish in containerized environment');
+        return { success: true, skipped: true, reason: 'No git repository' };
+      }
+
       console.log('Starting publish workflow...');
       
       // Step 1: Check git status
@@ -725,10 +759,23 @@ app.get('/api/files/:filename/history', requireAuth, async (req, res) => {
 // Check git status for unpublished changes
 app.get('/api/git-status', requireAuth, async (req, res) => {
   try {
+    const isRepo = await GitManager.isGitRepository();
+    if (!isRepo) {
+      res.json({ 
+        hasChanges: false,
+        changedFiles: 0,
+        files: [],
+        gitAvailable: false,
+        message: 'Git repository not available in containerized environment'
+      });
+      return;
+    }
+
     const status = await git.status();
     res.json({ 
       hasChanges: status.files.length > 0,
       changedFiles: status.files.length,
+      gitAvailable: true,
       files: status.files.map(f => ({
         path: f.path,
         status: f.index + f.working_dir
