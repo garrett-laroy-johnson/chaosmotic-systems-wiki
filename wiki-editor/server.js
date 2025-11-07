@@ -245,16 +245,7 @@ function requireAuth(req, res, next) {
 
 // Git operations wrapper with error handling
 class GitManager {
-  static isProductionEnvironment() {
-    return process.env.NODE_ENV === 'production';
-  }
-
   static async pullUpdates() {
-    if (GitManager.isProductionEnvironment()) {
-      console.log('Skipping git pull in production environment');
-      return { success: true, skipped: true };
-    }
-    
     try {
       console.log('Pulling latest changes...');
       // Get current branch name dynamically
@@ -269,11 +260,6 @@ class GitManager {
   }
 
   static async commitAndPush(message, author) {
-    if (GitManager.isProductionEnvironment()) {
-      console.log('Skipping git commit/push in production environment');
-      return { success: true, skipped: true };
-    }
-    
     try {
       console.log(`Committing changes: ${message}`);
       // Get current branch name dynamically
@@ -292,11 +278,6 @@ class GitManager {
   }
 
   static async getFileHistory(filename) {
-    if (GitManager.isProductionEnvironment()) {
-      console.log('Skipping git history in production environment');
-      return [];
-    }
-    
     try {
       const log = await git.log({ file: path.join('content', filename) });
       return log.all.slice(0, 10); // Last 10 commits
@@ -307,11 +288,6 @@ class GitManager {
   }
 
   static async publishAllChanges(author) {
-    if (GitManager.isProductionEnvironment()) {
-      console.log('Skipping git publish in production environment');
-      return { success: true, skipped: true };
-    }
-    
     try {
       console.log('Starting publish workflow...');
       
@@ -749,17 +725,6 @@ app.get('/api/files/:filename/history', requireAuth, async (req, res) => {
 // Check git status for unpublished changes
 app.get('/api/git-status', requireAuth, async (req, res) => {
   try {
-    if (GitManager.isProductionEnvironment()) {
-      // In production, there are no git operations, so no changes to track
-      res.json({ 
-        hasChanges: false,
-        changedFiles: 0,
-        files: [],
-        productionMode: true
-      });
-      return;
-    }
-    
     const status = await git.status();
     res.json({ 
       hasChanges: status.files.length > 0,
