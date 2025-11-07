@@ -107,6 +107,7 @@ async function checkGitHubAccess(username, accessToken) {
     }
     
     console.log(`🔍 Checking access for ${username} to organization ${allowedOrg}`);
+    console.log(`🔧 Environment ALLOWED_GITHUB_ORG: "${process.env.ALLOWED_GITHUB_ORG}"`);
     
     // Use the authenticated user's token to check their own membership
     // This works for both public and private memberships
@@ -116,6 +117,11 @@ async function checkGitHubAccess(username, accessToken) {
       });
       
       console.log(`📋 Found ${userOrgs.length} organizations for authenticated user`);
+      
+      // Debug: log all organization names
+      console.log(`🔍 User's organizations:`, userOrgs.map(org => org.login));
+      console.log(`🎯 Looking for organization: "${allowedOrg}"`);
+      
       const isMemberOfOrg = userOrgs.some(org => org.login.toLowerCase() === allowedOrg.toLowerCase());
       
       if (isMemberOfOrg) {
