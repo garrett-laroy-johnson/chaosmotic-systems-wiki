@@ -4,7 +4,7 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "node test-server.cjs",
+    "startCommand": "npm run wiki-editor",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   }

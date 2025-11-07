@@ -1,1 +1,1 @@
-web: node test-server.cjs
+web: npm run wiki-editor

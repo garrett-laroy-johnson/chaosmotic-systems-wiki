@@ -735,9 +735,11 @@ Only members of the Chaosmotic-Systems GitHub organization can access and edit t
     console.log('Skipping git operations in production environment');
   }
   
-  app.listen(PORT, () => {
-    console.log(`Chaosmotic Wiki Editor running on http://localhost:${PORT}`);
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Chaosmotic Wiki Editor running on http://0.0.0.0:${PORT}`);
     console.log('Default admin credentials: admin / admin123');
+    console.log('Environment:', process.env.NODE_ENV);
+    console.log('Railway Public Domain:', process.env.RAILWAY_PUBLIC_DOMAIN || 'not set');
   });
 }
 
