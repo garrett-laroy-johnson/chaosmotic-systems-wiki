@@ -1,10 +1,11 @@
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001; // Changed default to match Railway
 
 console.log('=== SERVER STARTUP DEBUG ===');
 console.log('Starting server with the following configuration:');
-console.log('PORT:', PORT);
+console.log('PORT from environment:', process.env.PORT);
+console.log('PORT being used:', PORT);
 console.log('NODE_ENV:', process.env.NODE_ENV);
 console.log('RAILWAY_PUBLIC_DOMAIN:', process.env.RAILWAY_PUBLIC_DOMAIN);
 console.log('RAILWAY_PRIVATE_DOMAIN:', process.env.RAILWAY_PRIVATE_DOMAIN);
