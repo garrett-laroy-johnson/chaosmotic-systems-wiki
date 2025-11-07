@@ -94,33 +94,72 @@ async function checkGitHubAccess(username, accessToken) {
       return true;
     }
     
-    // Check organization membership
+    console.log(`🔍 Checking access for ${username} to organization ${allowedOrg}`);
+    
+    // Check if user is an organization owner first
     try {
-      await octokit.rest.orgs.checkMembershipForUser({
-        org: allowedOrg,
-        username: username
-      });
-      console.log(`✅ ${username} is a member of ${allowedOrg}`);
+      const { data: org } = await octokit.rest.orgs.get({ org: allowedOrg });
+      console.log(`📋 Organization ${allowedOrg} found, checking ownership and membership...`);
       
-      // If specific team is required, check team membership
-      if (allowedTeam) {
+      // Get organization members (this includes owners)
+      try {
+        const { data: members } = await octokit.rest.orgs.listMembers({
+          org: allowedOrg,
+          per_page: 100
+        });
+        
+        const isMember = members.some(member => member.login.toLowerCase() === username.toLowerCase());
+        
+        if (isMember) {
+          console.log(`✅ ${username} is a member of ${allowedOrg}`);
+          
+          // If specific team is required, check team membership
+          if (allowedTeam) {
+            try {
+              await octokit.rest.teams.getMembershipForUserInOrg({
+                org: allowedOrg,
+                team_slug: allowedTeam,
+                username: username
+              });
+              console.log(`✅ ${username} is a member of team ${allowedTeam}`);
+              return true;
+            } catch (teamError) {
+              console.log(`❌ ${username} is not a member of team ${allowedTeam}`);
+              return false;
+            }
+          }
+          
+          return true;
+        }
+        
+        // Fallback: try the direct membership check
+        console.log(`🔄 Direct member list check failed, trying membership API...`);
+        await octokit.rest.orgs.checkMembershipForUser({
+          org: allowedOrg,
+          username: username
+        });
+        console.log(`✅ ${username} confirmed as member via membership API`);
+        return true;
+        
+      } catch (memberListError) {
+        console.log(`⚠️ Could not list members (possibly private org), trying membership check...`);
+        
+        // Try direct membership check as fallback
         try {
-          await octokit.rest.teams.getMembershipForUserInOrg({
+          await octokit.rest.orgs.checkMembershipForUser({
             org: allowedOrg,
-            team_slug: allowedTeam,
             username: username
           });
-          console.log(`✅ ${username} is a member of team ${allowedTeam}`);
+          console.log(`✅ ${username} is a member of ${allowedOrg} (via direct check)`);
           return true;
-        } catch (teamError) {
-          console.log(`❌ ${username} is not a member of team ${allowedTeam}`);
+        } catch (membershipError) {
+          console.log(`❌ ${username} is not a member of ${allowedOrg}:`, membershipError.message);
           return false;
         }
       }
       
-      return true;
     } catch (orgError) {
-      console.log(`❌ ${username} is not a member of ${allowedOrg}`);
+      console.log(`❌ Error accessing organization ${allowedOrg}:`, orgError.message);
       return false;
     }
     
