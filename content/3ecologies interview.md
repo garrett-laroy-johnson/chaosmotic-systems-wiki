@@ -4,6 +4,7 @@ title: 3Ecologies Project- An Interview with Erin Manning and Brian Massumi
 
 
 
+
 # 3Ecologies Project- An Interview with Erin Manning and Brian Massumi
 
 Link to the full article: [https://techniquesjournal.com/3ecologies-project/](url)
