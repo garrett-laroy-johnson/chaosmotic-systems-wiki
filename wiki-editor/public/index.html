@@ -81,22 +81,80 @@
                 <!-- Editor Area -->
                 <main class="editor-main">
                     <div id="welcome-screen" class="welcome">
-                        <h2>Welcome to the Chaosmotic Systems Wiki</h2>
-                        <p>Select an article from the sidebar to start editing, or create a new one.</p>
+                        <h2>Chaosmotic Systems Wiki Editor</h2>
+                        <p>This collaborative knowledge platform allows you to contribute to the class wiki. All changes are automatically saved to the public repository and published to the live site.</p>
                         
-                        <div class="welcome-help">
-                            <h3>✨ Magic Wiki Links</h3>
-                            <p>When you write <code>[[Page Name]]</code> in your articles, we automatically create that page for you! Just like Obsidian.</p>
-                            <div class="help-examples">
-                                <div class="help-example">
-                                    <strong>Type:</strong> <code>See [[Cybernetics]] for more info</code><br>
-                                    <strong>Result:</strong> Creates "cybernetics.md" automatically!
+                        <div class="welcome-section">
+                            <h3>Getting Started</h3>
+                            <ol class="instruction-list">
+                                <li><strong>Browse Articles:</strong> Use the sidebar to view existing articles</li>
+                                <li><strong>Edit Content:</strong> Click any article to open the editor</li>
+                                <li><strong>Save Changes:</strong> Click "Save" to commit your edits to GitHub</li>
+                                <li><strong>Create Articles:</strong> Use wiki links <code>[[Article Name]]</code> to create new pages</li>
+                                <li><strong>View Live Site:</strong> Click "Live Site" to see the published wiki</li>
+                            </ol>
+                        </div>
+
+                        <div class="welcome-section">
+                            <h3>Wiki Link Syntax</h3>
+                            <p>Create connections between articles using double brackets:</p>
+                            <div class="syntax-examples">
+                                <div class="syntax-example">
+                                    <code>[[Cybernetics]]</code>
+                                    <span class="syntax-result">→ Links to cybernetics.md (creates file if needed)</span>
                                 </div>
-                                <div class="help-example">
-                                    <strong>Type:</strong> <code>[[Norbert Wiener|the founder]]</code><br>
-                                    <strong>Result:</strong> Creates "norbert-wiener.md", displays as "the founder"
+                                <div class="syntax-example">
+                                    <code>[[Norbert Wiener|the founder]]</code>
+                                    <span class="syntax-result">→ Links to norbert-wiener.md, displays "the founder"</span>
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="welcome-section">
+                            <h3>Markdown Formatting</h3>
+                            <div class="formatting-grid">
+                                <div class="format-item">
+                                    <code># Heading 1</code>
+                                    <span>Main section headers</span>
+                                </div>
+                                <div class="format-item">
+                                    <code>**bold text**</code>
+                                    <span>Emphasis</span>
+                                </div>
+                                <div class="format-item">
+                                    <code>*italic text*</code>
+                                    <span>Secondary emphasis</span>
+                                </div>
+                                <div class="format-item">
+                                    <code>- List item</code>
+                                    <span>Bullet points</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="welcome-section">
+                            <h3>Publishing Workflow</h3>
+                            <p>Changes follow this automatic process:</p>
+                            <div class="workflow-steps">
+                                <div class="workflow-step">1. Edit → Save</div>
+                                <div class="workflow-arrow">→</div>
+                                <div class="workflow-step">2. Sync to GitHub</div>
+                                <div class="workflow-arrow">→</div>
+                                <div class="workflow-step">3. Auto-build</div>
+                                <div class="workflow-arrow">→</div>
+                                <div class="workflow-step">4. Live Site Update</div>
+                            </div>
+                            <p class="workflow-note">Updates typically appear on the live site within 2-3 minutes.</p>
+                        </div>
+
+                        <div class="welcome-section">
+                            <h3>Navigation</h3>
+                            <ul class="nav-instructions">
+                                <li><strong>Sync:</strong> Manual repository sync (usually automatic)</li>
+                                <li><strong>Publish:</strong> Bulk commit multiple changes</li>
+                                <li><strong>Live Site:</strong> View the published wiki</li>
+                                <li><strong>Preview:</strong> See rendered markdown while editing</li>
+                            </ul>
                         </div>
                         
                         <div class="welcome-stats">

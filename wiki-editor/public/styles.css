@@ -500,6 +500,114 @@ body {
   font-size: 0.875rem;
 }
 
+/* Welcome Screen Instruction Styles */
+.welcome-section {
+  margin: 2rem 0;
+  text-align: left;
+}
+
+.welcome-section h3 {
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  border-left: 4px solid var(--primary-color);
+  padding-left: 1rem;
+}
+
+.instruction-list {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.instruction-list li {
+  margin: 0.75rem 0;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.syntax-examples, .formatting-grid {
+  background: var(--background-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.syntax-example, .format-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.syntax-example:last-child, .format-item:last-child {
+  border-bottom: none;
+}
+
+.syntax-result {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.formatting-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.format-item span {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.workflow-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+
+.workflow-step {
+  background: var(--primary-color);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.workflow-arrow {
+  color: var(--text-secondary);
+  font-weight: bold;
+}
+
+.workflow-note {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin-top: 1rem;
+}
+
+.nav-instructions {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.nav-instructions li {
+  padding: 0.5rem 0;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.nav-instructions li:last-child {
+  border-bottom: none;
+}
+
 /* Editor Container */
 #editor-container {
   display: flex;
