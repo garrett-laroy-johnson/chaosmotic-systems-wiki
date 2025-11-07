@@ -715,10 +715,12 @@ body {
 }
 
 .toast {
-  background: white;
+  background: var(--card-bg);
+  color: var(--text-primary);
   padding: 1rem 1.5rem;
   border-radius: 0.5rem;
-  box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 15px rgba(0,0,0,0.3);
   margin-bottom: 1rem;
   border-left: 4px solid var(--success-color);
   animation: slideIn 0.3s ease-out;

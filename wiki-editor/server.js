@@ -346,8 +346,10 @@ class GitManager {
   static async isGitRepository() {
     try {
       await git.revparse(['--git-dir']);
+      console.log('✅ Git repository detected');
       return true;
     } catch (error) {
+      console.log('❌ Not a git repository:', error.message);
       return false;
     }
   }
@@ -397,15 +399,32 @@ class GitManager {
       }
 
       console.log(`Committing changes: ${message}`);
-      // Get current branch name dynamically
-      const currentBranch = await git.revparse(['--abbrev-ref', 'HEAD']);
-      console.log(`Pushing to origin/${currentBranch}`);
-      await git.add('.');
-      await git.commit(message, undefined, {
-        '--author': `"${author}" <${author}@chaosmotic-wiki.local>`
-      });
-      await git.push('origin', currentBranch);
-      return { success: true };
+      
+      // Try git operations with additional error handling
+      try {
+        // Get current branch name dynamically
+        const currentBranch = await git.revparse(['--abbrev-ref', 'HEAD']);
+        console.log(`Pushing to origin/${currentBranch}`);
+        await git.add('.');
+        await git.commit(message, undefined, {
+          '--author': `"${author}" <${author}@chaosmotic-wiki.local>`
+        });
+        await git.push('origin', currentBranch);
+        return { success: true };
+      } catch (gitError) {
+        console.error('Git operation failed, falling back to GitHub API:', gitError.message);
+        
+        // Fallback to GitHub API if git operations fail
+        if (filePath) {
+          const files = [{
+            path: filePath,
+            relativePath: path.relative(path.join(__dirname, '..'), filePath).replace(/\\/g, '/')
+          }];
+          return await GitHubAPIManager.commitFilesToGitHub(files, message, author);
+        } else {
+          return { success: false, error: 'Git operations failed and no file path provided for API fallback' };
+        }
+      }
     } catch (error) {
       console.error('Git commit/push error:', error);
       return { success: false, error: error.message };
