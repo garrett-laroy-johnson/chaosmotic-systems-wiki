@@ -3,6 +3,7 @@ title: LARP Politics and Hyperreality
 ---
 
 
+
 # LARP Politics and Hyperreality
 
 # *"LARP comes after farce"*
@@ -16,5 +17,7 @@ LARPing (Live Action Roleplay) is normally associated with cosplay communities, 
 The idea of wearing an ideology, embodying it is deeply compelling and reminiscent of some of the themes we look at in this course... You get to really _feel_ the contradictions, failings, successes, of an ideology by embodying it.
 
 *However* the risk present here is the low-commitment nature of the engagement with real world politics. The flattening and aestheticization of politics is especially dangerous now. LARPing is real, but detached at the same time. And when LARPing crashes headfirst into reality... the results are often strange and unpleasant (Jan 6th).
+
+There's also what I'm gonna call "copes," which is what happens when one becomes *way* too invested in their framework and suddenly, instead of sussing out these contradictions, failings, successes, use cases and sewing them all together into one big patchwork sequence of ideas... one will find ways to bridge the contradictions.
 
 *leo wuz here >:)*
