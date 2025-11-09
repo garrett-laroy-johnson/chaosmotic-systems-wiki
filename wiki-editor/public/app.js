@@ -62,10 +62,6 @@ class WikiEditor {
       this.syncWithGit();
     });
 
-    document.getElementById('publish-btn').addEventListener('click', () => {
-      this.publishChanges();
-    });
-
     // Editor content change detection
     const editor = document.getElementById('editor');
     editor.addEventListener('input', () => {
@@ -217,7 +213,6 @@ class WikiEditor {
     document.getElementById('editor-screen').classList.remove('hidden');
     document.getElementById('current-user').textContent = `Welcome, ${this.currentUser.displayName}`;
     this.loadFiles();
-    this.checkPublishStatus();
     
     // Start periodic status checking to catch external file changes
     this.startStatusPolling();
@@ -416,7 +411,6 @@ ${content}`;
         this.unsavedChanges = false;
         this.updateSaveButton();
         await this.loadFiles();
-        this.checkPublishStatus(); // Update publish status after saving
         
         // Check if any linked pages were created
         if (data.createdLinkedPages && data.createdLinkedPages.length > 0) {
