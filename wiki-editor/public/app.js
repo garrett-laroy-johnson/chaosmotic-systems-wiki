@@ -768,14 +768,14 @@ ${content}`;
       return;
     }
 
-    // Try to open the live Quartz site for the current file
+    // Open the live GitHub Pages site for the current file
     const filename = this.currentFile.filename.replace('.md', '');
-    const quartzUrl = 'http://localhost:8080/' + filename;
+    const githubPagesUrl = 'https://chaosmotic-systems.github.io/chaosmotic-systems-wiki/' + filename;
     
     // Open in new tab
-    window.open(quartzUrl, '_blank');
+    window.open(githubPagesUrl, '_blank');
     
-    this.showToast('Opening live preview... (Make sure Quartz is running on port 8080)', 'success');
+    this.showToast('Opening live site... (Changes appear within 2-3 minutes of saving)', 'success');
   }
 
   // Utility Functions
