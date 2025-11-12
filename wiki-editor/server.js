@@ -173,6 +173,12 @@ class GitHubAPIManager {
 // Trust Railway's proxy for proper IP detection
 app.set('trust proxy', true);
 
+// Basic health check - should work even if other routes fail
+app.get('/health', (req, res) => {
+  console.log('💚 Health check accessed');
+  res.status(200).send('OK');
+});
+
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -880,6 +886,8 @@ class FileManager {
 
 // Routes
 
+console.log('🔧 Registering routes...');
+
 // GitHub OAuth routes
 // Test route
 app.get('/test', (req, res) => {
@@ -896,6 +904,8 @@ app.get('/test', (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+console.log('✅ Test route registered');
 
 // OAuth routes
 app.get('/auth/github', (req, res, next) => {
