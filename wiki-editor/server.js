@@ -210,8 +210,13 @@ let redisStore = null;
 try {
   const redisUrl = process.env.REDIS_URL || process.env.REDISCLOUD_URL;
   
+  console.log('🔍 Debug - Environment variables:');
+  console.log('REDIS_URL:', process.env.REDIS_URL ? '✅ Found' : '❌ Not found');
+  console.log('REDISCLOUD_URL:', process.env.REDISCLOUD_URL ? '✅ Found' : '❌ Not found');
+  
   if (redisUrl) {
     console.log('🔄 Setting up Redis for session storage...');
+    console.log('🔗 Redis URL format:', redisUrl.substring(0, 20) + '...');
     
     const redisClient = redis.createClient({ url: redisUrl });
     
