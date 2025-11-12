@@ -1,5 +1,6 @@
 const express = require('express');
 const session = require('express-session');
+const RedisStore = require('connect-redis').default;
 const redis = require('redis');
 const bcrypt = require('bcryptjs');
 const simpleGit = require('simple-git');
@@ -203,7 +204,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// Redis setup for session storage - synchronous approach
+// Redis setup for session storage - connect-redis v9 API
 let redisStore = null;
 
 // Initialize Redis if URL is available
@@ -218,7 +219,6 @@ if (redisUrl) {
     console.log('🔄 Setting up Redis for session storage...');
     console.log('🔗 Redis URL format:', redisUrl.substring(0, 20) + '...');
     
-    const RedisStore = require('connect-redis');
     const redisClient = redis.createClient({ url: redisUrl });
     
     redisClient.on('error', (err) => {
@@ -229,9 +229,8 @@ if (redisUrl) {
       console.log('✅ Redis connected - sessions will persist across restarts!');
     });
 
-    // Create Redis store (connect-redis will handle the connection)
-    redisStore = RedisStore(session);
-    redisStore = new redisStore({ 
+    // Create Redis store using connect-redis v9 API
+    redisStore = new RedisStore({
       client: redisClient,
       prefix: "chaosmotic-wiki:",
     });
