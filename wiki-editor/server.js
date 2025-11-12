@@ -211,7 +211,7 @@ app.use(express.urlencoded({ extended: true }));
 // Add request logging middleware
 app.use((req, res, next) => {
   // Log important auth-related requests
-  if (req.path.includes('/auth') || req.path === '/' || req.path.includes('/api')) {
+  if (req.path.includes('/auth') || req.path === '/' || req.path.includes('/api') || req.path === '/test') {
     console.log(`📊 ${req.method} ${req.path} - ${req.ip}`);
   }
   next();
@@ -279,6 +279,14 @@ app.use(session({
     sameSite: 'lax'
   }
 }));
+
+// Debug session middleware
+app.use((req, res, next) => {
+  if (req.path === '/test' || req.path.includes('/auth')) {
+    console.log(`🛡️ Session middleware for ${req.path}`);
+  }
+  next();
+});
 
 // Passport configuration
 app.use(passport.initialize());
@@ -893,11 +901,11 @@ console.log('🔧 Registering routes...');
 app.get('/test', (req, res) => {
   console.log('📋 Test route accessed');
   try {
+    // Simple response without session access
     res.json({ 
       message: 'Server is working!', 
       time: new Date().toISOString(),
-      redis: redisStore ? 'connected' : 'not connected',
-      session: req.session ? 'active' : 'inactive'
+      status: 'healthy'
     });
   } catch (error) {
     console.log('❌ Test route error:', error);
