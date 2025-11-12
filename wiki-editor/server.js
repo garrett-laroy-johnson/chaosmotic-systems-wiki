@@ -271,18 +271,18 @@ if (redisUrl) {
 
 console.log('🔧 Configuring session middleware...');
 app.use(session({
-  store: redisStore || undefined, // Only use Redis store if it was created successfully
+  store: undefined, // Temporarily disable Redis to test OAuth
   secret: process.env.SESSION_SECRET || 'chaosmotic-wiki-secret-change-in-production',
   resave: false,
   saveUninitialized: false,
   cookie: { 
     secure: process.env.NODE_ENV === 'production', // HTTPS in production
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days (longer since we have persistence!)
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     httpOnly: true,
     sameSite: 'lax'
   }
 }));
-console.log('✅ Session middleware configured with store:', redisStore ? 'Redis' : 'Memory');
+console.log('✅ Session middleware configured with store: Memory (Redis temporarily disabled)');
 
 // Debug session middleware
 app.use((req, res, next) => {
