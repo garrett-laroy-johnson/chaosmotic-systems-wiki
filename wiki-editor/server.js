@@ -293,24 +293,18 @@ setupRedisStore().then(store => {
 });
 
 console.log('🔧 Configuring session middleware...');
-
-// Session configuration with dynamic store
-app.use((req, res, next) => {
-  session({
-    store: redisStore, // Will be null initially, then Redis store when ready
-    secret: process.env.SESSION_SECRET || 'chaosmotic-wiki-secret-change-in-production',
-    resave: false,
-    saveUninitialized: false,
-    cookie: { 
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-      httpOnly: true,
-      sameSite: 'lax'
-    }
-  })(req, res, next);
-});
-
-console.log('✅ Session middleware configured with dynamic store (Memory → Redis when connected)');
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'chaosmotic-wiki-secret-change-in-production',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { 
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    httpOnly: true,
+    sameSite: 'lax'
+  }
+}));
+console.log('✅ Session middleware configured with Memory store (stable for OAuth)');
 
 // Debug session middleware
 app.use((req, res, next) => {
