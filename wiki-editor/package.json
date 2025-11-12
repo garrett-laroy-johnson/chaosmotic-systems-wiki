@@ -11,24 +11,31 @@
     "deploy": "echo 'Ready for deployment'"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "express-session": "^1.17.3",
+    "@octokit/rest": "^20.0.2",
     "bcryptjs": "^2.4.3",
-    "multer": "^1.4.5-lts.1",
-    "simple-git": "^3.20.0",
     "chokidar": "^3.5.3",
-    "marked": "^9.1.6",
-    "gray-matter": "^4.0.3",
+    "connect-redis": "^9.0.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
     "express-rate-limit": "^7.1.5",
+    "express-session": "^1.17.3",
+    "gray-matter": "^4.0.3",
+    "marked": "^9.1.6",
+    "multer": "^1.4.5-lts.1",
     "passport": "^0.7.0",
     "passport-github2": "^0.1.12",
-    "dotenv": "^16.3.1",
-    "@octokit/rest": "^20.0.2"
+    "redis": "^5.9.0",
+    "simple-git": "^3.20.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"
   },
-  "keywords": ["wiki", "markdown", "collaboration", "education"],
+  "keywords": [
+    "wiki",
+    "markdown",
+    "collaboration",
+    "education"
+  ],
   "author": "Generated for Chaosmotic Systems",
   "license": "MIT"
 }

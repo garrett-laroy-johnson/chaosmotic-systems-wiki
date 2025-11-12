@@ -1,5 +1,7 @@
 const express = require('express');
 const session = require('express-session');
+const RedisStore = require('connect-redis');
+const redis = require('redis');
 const bcrypt = require('bcryptjs');
 const simpleGit = require('simple-git');
 const fs = require('fs').promises;
@@ -201,13 +203,54 @@ app.use(limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
+
+// Redis setup for session storage - simplified approach
+let redisStore = null;
+
+try {
+  const redisUrl = process.env.REDIS_URL || process.env.REDISCLOUD_URL;
+  
+  if (redisUrl) {
+    console.log('🔄 Setting up Redis for session storage...');
+    
+    const redisClient = redis.createClient({ url: redisUrl });
+    
+    redisClient.on('error', (err) => {
+      console.log('❌ Redis error:', err.message);
+      console.log('📝 Falling back to memory sessions');
+    });
+
+    redisClient.on('connect', () => {
+      console.log('✅ Redis connected - sessions will persist across restarts!');
+    });
+
+    // Try to connect and create store
+    redisClient.connect().then(() => {
+      const RedisStoreFactory = RedisStore(session);
+      redisStore = new RedisStoreFactory({ 
+        client: redisClient,
+        prefix: "chaosmotic-wiki:"
+      });
+    }).catch((err) => {
+      console.log('❌ Failed to connect to Redis:', err.message);
+      console.log('📝 Using memory sessions (will lose sessions on restart)');
+    });
+  } else {
+    console.log('📝 No Redis URL configured - using memory sessions');
+  }
+} catch (error) {
+  console.log('❌ Redis setup error:', error.message);
+  console.log('📝 Falling back to memory sessions');
+}
+
 app.use(session({
+  store: redisStore, // Use Redis store if available, otherwise memory store
   secret: process.env.SESSION_SECRET || 'chaosmotic-wiki-secret-change-in-production',
   resave: false,
   saveUninitialized: false,
   cookie: { 
     secure: process.env.NODE_ENV === 'production', // HTTPS in production
-    maxAge: 24 * 60 * 60 * 1000, // 24 hours
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days (longer since we have persistence!)
     httpOnly: true,
     sameSite: 'lax'
   }
@@ -1125,3 +1168,14 @@ Only members of the Chaosmotic-Systems GitHub organization can access and edit t
 }
 
 startServer().catch(console.error);
+
+// Graceful shutdown handling
+process.on('SIGTERM', () => {
+  console.log('Received SIGTERM, shutting down gracefully...');
+  process.exit(0);
+});
+
+process.on('SIGINT', () => {
+  console.log('Received SIGINT, shutting down gracefully...');
+  process.exit(0);
+});
