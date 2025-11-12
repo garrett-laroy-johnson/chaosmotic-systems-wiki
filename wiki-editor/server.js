@@ -884,13 +884,53 @@ class FileManager {
 // Test route
 app.get('/test', (req, res) => {
   console.log('📋 Test route accessed');
-  res.json({ message: 'Server is working!', time: new Date().toISOString() });
+  try {
+    res.json({ 
+      message: 'Server is working!', 
+      time: new Date().toISOString(),
+      redis: redisStore ? 'connected' : 'not connected',
+      session: req.session ? 'active' : 'inactive'
+    });
+  } catch (error) {
+    console.log('❌ Test route error:', error);
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // OAuth routes
 app.get('/auth/github', (req, res, next) => {
   console.log('🔄 Starting GitHub OAuth flow...');
-  passport.authenticate('github', { scope: ['user:email', 'repo'] })(req, res, next);
+  
+  // Add timeout to catch hanging OAuth
+  const timeout = setTimeout(() => {
+    console.log('⏰ OAuth flow timed out after 10 seconds');
+    if (!res.headersSent) {
+      res.redirect('/?error=oauth_timeout');
+    }
+  }, 10000);
+  
+  try {
+    passport.authenticate('github', { 
+      scope: ['user:email', 'repo'],
+      failureRedirect: '/?error=oauth_failed'
+    })(req, res, (err) => {
+      clearTimeout(timeout);
+      if (err) {
+        console.log('❌ OAuth authentication error:', err);
+        if (!res.headersSent) {
+          res.redirect('/?error=oauth_error');
+        }
+      } else {
+        next();
+      }
+    });
+  } catch (error) {
+    clearTimeout(timeout);
+    console.log('❌ OAuth route error:', error);
+    if (!res.headersSent) {
+      res.redirect('/?error=oauth_exception');
+    }
+  }
 });
 
 app.get('/auth/github/callback', 
