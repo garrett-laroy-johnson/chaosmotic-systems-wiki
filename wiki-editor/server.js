@@ -114,6 +114,59 @@ class GitHubAPIManager {
       return { success: false, error: error.message };
     }
   }
+
+  static async deleteFileOnGitHub(relativePath, message, author) {
+    try {
+      // Check for GitHub token
+      const githubToken = process.env.GITHUB_TOKEN;
+      if (!githubToken) {
+        console.error('❌ GITHUB_TOKEN environment variable not set - cannot delete from GitHub');
+        return { 
+          success: false, 
+          error: 'GitHub token not configured. Please set GITHUB_TOKEN environment variable.' 
+        };
+      }
+
+      const octokit = new Octokit({
+        auth: githubToken
+      });
+
+      const owner = 'Chaosmotic-Systems';
+      const repo = 'chaosmotic-systems-wiki';
+      const branch = 'app-dev';
+
+      console.log(`🗑️ Deleting file ${relativePath} from GitHub via API...`);
+
+      // Get the file to get its SHA
+      const { data: fileData } = await octokit.rest.repos.getContent({
+        owner,
+        repo,
+        path: relativePath,
+        ref: branch
+      });
+
+      // Delete the file
+      await octokit.rest.repos.deleteFile({
+        owner,
+        repo,
+        path: relativePath,
+        message,
+        sha: fileData.sha,
+        branch,
+        author: {
+          name: author,
+          email: `${author}@chaosmotic-wiki.local`
+        }
+      });
+
+      console.log(`✅ Successfully deleted ${relativePath} from GitHub`);
+      return { success: true, message, method: 'github-api-delete' };
+
+    } catch (error) {
+      console.error(`❌ GitHub API delete error for ${relativePath}:`, error);
+      return { success: false, error: error.message };
+    }
+  }
 }
 
 // Trust Railway's proxy for proper IP detection
@@ -710,9 +763,16 @@ class FileManager {
       // Process Obsidian-style links and create missing pages
       const createdFiles = await LinkProcessor.createMissingLinkedPages(content, author);
       
-      // Auto-commit the main file
+      // Use GitHub API for individual file commit
+      const relativePath = `content/${filename}`;
       const commitMessage = `Update ${filename} by ${author}`;
-      const result = await GitManager.commitAndPush(commitMessage, author, filePath);
+      const githubManager = new GitHubAPIManager();
+      
+      // Commit individual file to GitHub via API
+      const result = await githubManager.commitFilesToGitHub([{
+        path: filePath,
+        relativePath: relativePath
+      }], commitMessage, author);
       
       // Return result with info about created files
       return {
@@ -727,10 +787,26 @@ class FileManager {
   static async deleteFile(filename, author) {
     try {
       const filePath = path.join(CONTENT_DIR, filename);
+      
+      // Check if file exists before deleting
+      try {
+        await fs.access(filePath);
+      } catch {
+        throw new Error(`File ${filename} does not exist`);
+      }
+      
+      // For delete operations, use GitHub API directly since file will be gone locally
+      const relativePath = `content/${filename}`;
+      const githubManager = new GitHubAPIManager();
+      
+      // Delete file locally
       await fs.unlink(filePath);
       
+      // Delete via GitHub API
       const commitMessage = `Delete ${filename} by ${author}`;
-      return await GitManager.commitAndPush(commitMessage, author);
+      const result = await githubManager.deleteFileOnGitHub(relativePath, commitMessage, author);
+      
+      return result;
     } catch (error) {
       throw new Error(`Failed to delete file: ${error.message}`);
     }
