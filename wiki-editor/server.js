@@ -1,6 +1,5 @@
 const express = require('express');
 const session = require('express-session');
-const RedisStore = require('connect-redis');
 const redis = require('redis');
 const bcrypt = require('bcryptjs');
 const simpleGit = require('simple-git');
@@ -204,48 +203,53 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// Redis setup for session storage - simplified approach
+// Redis setup for session storage - synchronous approach
 let redisStore = null;
 
-try {
-  const redisUrl = process.env.REDIS_URL || process.env.REDISCLOUD_URL;
-  
-  console.log('🔍 Debug - Environment variables:');
-  console.log('REDIS_URL:', process.env.REDIS_URL ? '✅ Found' : '❌ Not found');
-  console.log('REDISCLOUD_URL:', process.env.REDISCLOUD_URL ? '✅ Found' : '❌ Not found');
-  
-  if (redisUrl) {
+// Initialize Redis if URL is available
+const redisUrl = process.env.REDIS_URL || process.env.REDISCLOUD_URL;
+
+console.log('🔍 Debug - Environment variables:');
+console.log('REDIS_URL:', process.env.REDIS_URL ? '✅ Found' : '❌ Not found');
+console.log('REDISCLOUD_URL:', process.env.REDISCLOUD_URL ? '✅ Found' : '❌ Not found');
+
+if (redisUrl) {
+  try {
     console.log('🔄 Setting up Redis for session storage...');
     console.log('🔗 Redis URL format:', redisUrl.substring(0, 20) + '...');
     
+    const RedisStore = require('connect-redis');
     const redisClient = redis.createClient({ url: redisUrl });
     
     redisClient.on('error', (err) => {
       console.log('❌ Redis error:', err.message);
-      console.log('📝 Falling back to memory sessions');
     });
 
     redisClient.on('connect', () => {
       console.log('✅ Redis connected - sessions will persist across restarts!');
     });
 
-    // Try to connect and create store
-    redisClient.connect().then(() => {
-      const RedisStoreFactory = RedisStore(session);
-      redisStore = new RedisStoreFactory({ 
-        client: redisClient,
-        prefix: "chaosmotic-wiki:"
-      });
-    }).catch((err) => {
-      console.log('❌ Failed to connect to Redis:', err.message);
-      console.log('📝 Using memory sessions (will lose sessions on restart)');
+    // Create Redis store (connect-redis will handle the connection)
+    redisStore = RedisStore(session);
+    redisStore = new redisStore({ 
+      client: redisClient,
+      prefix: "chaosmotic-wiki:",
     });
-  } else {
-    console.log('📝 No Redis URL configured - using memory sessions');
+    
+    console.log('✅ Redis session store created successfully!');
+    
+    // Start connection in background
+    redisClient.connect().catch((err) => {
+      console.log('❌ Redis connection failed:', err.message);
+    });
+    
+  } catch (error) {
+    console.log('❌ Redis setup error:', error.message);
+    console.log('📝 Falling back to memory sessions');
+    redisStore = null;
   }
-} catch (error) {
-  console.log('❌ Redis setup error:', error.message);
-  console.log('📝 Falling back to memory sessions');
+} else {
+  console.log('📝 No Redis URL configured - using memory sessions');
 }
 
 app.use(session({
