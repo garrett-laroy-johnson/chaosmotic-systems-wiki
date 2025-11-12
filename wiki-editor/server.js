@@ -201,6 +201,16 @@ const limiter = rateLimit({
 app.use(limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
+
+// Add request logging middleware
+app.use((req, res, next) => {
+  // Log important auth-related requests
+  if (req.path.includes('/auth') || req.path === '/' || req.path.includes('/api')) {
+    console.log(`📊 ${req.method} ${req.path} - ${req.ip}`);
+  }
+  next();
+});
+
 app.use(express.static('public'));
 
 // Redis setup for session storage - connect-redis v6 API
@@ -269,6 +279,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // GitHub OAuth Strategy
+console.log('🔧 Setting up GitHub OAuth strategy...');
+console.log('GitHub Client ID:', process.env.GITHUB_CLIENT_ID ? 'Present' : 'MISSING');
+console.log('GitHub Client Secret:', process.env.GITHUB_CLIENT_SECRET ? 'Present' : 'MISSING');
+
 passport.use(new GitHubStrategy({
   clientID: process.env.GITHUB_CLIENT_ID,
   clientSecret: process.env.GITHUB_CLIENT_SECRET,
@@ -867,6 +881,13 @@ class FileManager {
 // Routes
 
 // GitHub OAuth routes
+// Test route
+app.get('/test', (req, res) => {
+  console.log('📋 Test route accessed');
+  res.json({ message: 'Server is working!', time: new Date().toISOString() });
+});
+
+// OAuth routes
 app.get('/auth/github', (req, res, next) => {
   console.log('🔄 Starting GitHub OAuth flow...');
   passport.authenticate('github', { scope: ['user:email', 'repo'] })(req, res, next);
