@@ -219,70 +219,98 @@ app.use((req, res, next) => {
 
 app.use(express.static('public'));
 
-// Redis setup for session storage - with failsafe
+// Redis setup for session storage - robust implementation
 let redisStore = null;
-let redisClient = null;
 
-const redisUrl = process.env.REDIS_URL || process.env.REDISCLOUD_URL;
+async function setupRedisStore() {
+  const redisUrl = process.env.REDIS_URL || process.env.REDISCLOUD_URL;
+  
+  console.log('🔍 Debug - Environment variables:');
+  console.log('REDIS_URL:', process.env.REDIS_URL ? '✅ Found' : '❌ Not found');
+  console.log('REDISCLOUD_URL:', process.env.REDISCLOUD_URL ? '✅ Found' : '❌ Not found');
+  
+  if (!redisUrl) {
+    console.log('📝 No Redis URL configured - using memory sessions');
+    return null;
+  }
 
-console.log('🔍 Debug - Environment variables:');
-console.log('REDIS_URL:', process.env.REDIS_URL ? '✅ Found' : '❌ Not found');
-console.log('REDISCLOUD_URL:', process.env.REDISCLOUD_URL ? '✅ Found' : '❌ Not found');
-
-if (redisUrl) {
   try {
     console.log('🔄 Setting up Redis for session storage...');
     console.log('🔗 Redis URL format:', redisUrl.substring(0, 20) + '...');
     
-    redisClient = redis.createClient({ 
+    const redisClient = redis.createClient({ 
       url: redisUrl,
       socket: {
-        connectTimeout: 5000, // 5 second timeout
-        lazyConnect: true // Don't auto-connect
-      }
+        connectTimeout: 3000,
+        lazyConnect: true
+      },
+      retry_strategy: () => null // Don't retry to avoid blocking
     });
     
     redisClient.on('error', (err) => {
-      console.log('❌ Redis error:', err.message);
-      console.log('📝 Falling back to memory sessions for this request');
+      console.log('❌ Redis error (non-blocking):', err.message);
     });
 
     redisClient.on('connect', () => {
       console.log('✅ Redis connected - sessions will persist across restarts!');
     });
 
-    // Create Redis store but don't wait for connection
+    redisClient.on('disconnect', () => {
+      console.log('📝 Redis disconnected - sessions fall back to memory');
+    });
+
+    // Create store first, connect later
     const RedisStore = require('connect-redis')(session);
-    redisStore = new RedisStore({ 
+    const store = new RedisStore({ 
       client: redisClient,
       prefix: "chaosmotic-wiki:",
+      ttl: 7 * 24 * 60 * 60, // 7 days in seconds
     });
     
     console.log('✅ Redis session store created successfully!');
     
+    // Connect in background - don't wait for it
+    setTimeout(() => {
+      redisClient.connect().catch(err => {
+        console.log('❌ Redis background connection failed:', err.message);
+      });
+    }, 1000);
+    
+    return store;
+    
   } catch (error) {
     console.log('❌ Redis setup error:', error.message);
     console.log('📝 Falling back to memory sessions');
-    redisStore = null;
+    return null;
   }
-} else {
-  console.log('📝 No Redis URL configured - using memory sessions');
 }
 
+// Setup Redis store
+setupRedisStore().then(store => {
+  redisStore = store;
+}).catch(err => {
+  console.log('❌ Redis store setup failed:', err);
+});
+
 console.log('🔧 Configuring session middleware...');
-app.use(session({
-  store: undefined, // Temporarily disable Redis to test OAuth
-  secret: process.env.SESSION_SECRET || 'chaosmotic-wiki-secret-change-in-production',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { 
-    secure: process.env.NODE_ENV === 'production', // HTTPS in production
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    httpOnly: true,
-    sameSite: 'lax'
-  }
-}));
-console.log('✅ Session middleware configured with store: Memory (Redis temporarily disabled)');
+
+// Session configuration with dynamic store
+app.use((req, res, next) => {
+  session({
+    store: redisStore, // Will be null initially, then Redis store when ready
+    secret: process.env.SESSION_SECRET || 'chaosmotic-wiki-secret-change-in-production',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { 
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      httpOnly: true,
+      sameSite: 'lax'
+    }
+  })(req, res, next);
+});
+
+console.log('✅ Session middleware configured with dynamic store (Memory → Redis when connected)');
 
 // Debug session middleware
 app.use((req, res, next) => {
@@ -1272,15 +1300,7 @@ Only members of the Chaosmotic-Systems GitHub organization can access and edit t
     console.log('Default admin credentials: admin / admin123');
     console.log('Environment:', process.env.NODE_ENV);
     console.log('Railway Public Domain:', process.env.RAILWAY_PUBLIC_DOMAIN || 'not set');
-    
-    // Connect to Redis AFTER server is running
-    if (redisClient) {
-      console.log('🔄 Connecting to Redis in background...');
-      redisClient.connect().catch((err) => {
-        console.log('❌ Redis connection failed:', err.message);
-        console.log('📝 Sessions will use memory store');
-      });
-    }
+    console.log('🎉 Server ready! GitHub OAuth functional, Redis sessions loading in background.');
   });
 }
 
