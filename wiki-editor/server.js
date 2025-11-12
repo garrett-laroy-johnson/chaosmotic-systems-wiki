@@ -228,7 +228,7 @@ if (redisUrl) {
       console.log('✅ Redis connected - sessions will persist across restarts!');
     });
 
-    // Create Redis store with connect-redis v6 API (much simpler!)
+    // Create Redis store with connect-redis v6 API
     const RedisStore = require('connect-redis')(session);
     redisStore = new RedisStore({ 
       client: redisClient,
@@ -867,14 +867,22 @@ class FileManager {
 // Routes
 
 // GitHub OAuth routes
-app.get('/auth/github', passport.authenticate('github', { scope: ['user:email', 'repo'] }));
+app.get('/auth/github', (req, res, next) => {
+  console.log('🔄 Starting GitHub OAuth flow...');
+  passport.authenticate('github', { scope: ['user:email', 'repo'] })(req, res, next);
+});
 
 app.get('/auth/github/callback', 
+  (req, res, next) => {
+    console.log('📥 GitHub OAuth callback received...');
+    next();
+  },
   passport.authenticate('github', { 
     failureRedirect: '/?error=access_denied',
     failureMessage: true
   }),
   (req, res) => {
+    console.log('✅ GitHub OAuth successful, saving session...');
     // Successful authentication and authorization
     req.session.user = {
       username: req.user.username,
@@ -886,7 +894,16 @@ app.get('/auth/github/callback',
     };
     
     console.log(`User ${req.user.username} logged in via GitHub`);
-    res.redirect('/');
+    
+    // Save session explicitly
+    req.session.save((err) => {
+      if (err) {
+        console.log('❌ Session save error:', err);
+        return res.redirect('/?error=session_error');
+      }
+      console.log('✅ Session saved, redirecting to home...');
+      res.redirect('/');
+    });
   }
 );
 
