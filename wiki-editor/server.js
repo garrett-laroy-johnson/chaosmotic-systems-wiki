@@ -871,10 +871,9 @@ class FileManager {
       // Use GitHub API for individual file commit
       const relativePath = `content/${filename}`;
       const commitMessage = `Update ${filename} by ${author}`;
-      const githubManager = new GitHubAPIManager();
       
-      // Commit individual file to GitHub via API
-      const result = await githubManager.commitFilesToGitHub([{
+      // Commit individual file to GitHub via API (static method)
+      const result = await GitHubAPIManager.commitFilesToGitHub([{
         path: filePath,
         relativePath: relativePath
       }], commitMessage, author);
@@ -902,14 +901,13 @@ class FileManager {
       
       // For delete operations, use GitHub API directly since file will be gone locally
       const relativePath = `content/${filename}`;
-      const githubManager = new GitHubAPIManager();
       
       // Delete file locally
       await fs.unlink(filePath);
       
-      // Delete via GitHub API
+      // Delete via GitHub API (static method)
       const commitMessage = `Delete ${filename} by ${author}`;
-      const result = await githubManager.deleteFileOnGitHub(relativePath, commitMessage, author);
+      const result = await GitHubAPIManager.deleteFileOnGitHub(relativePath, commitMessage, author);
       
       return result;
     } catch (error) {
