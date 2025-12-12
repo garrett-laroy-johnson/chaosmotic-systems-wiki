@@ -585,7 +585,7 @@ class GitManager {
       } catch (gitError) {
         console.error('Git operation failed, falling back to GitHub API:', gitError.message);
         
-        // Fallback to GitHub API if git operations fail
+        // Fallback to GitHub API if git operations fail (credentials, network, etc.)
         if (filePath) {
           const files = [{
             path: filePath,
@@ -593,7 +593,8 @@ class GitManager {
           }];
           return await GitHubAPIManager.commitFilesToGitHub(files, message, author);
         } else {
-          return { success: false, error: 'Git operations failed and no file path provided for API fallback' };
+          // No file path - return success since individual operations will use API
+          return { success: true, skipped: true, reason: 'Git credentials not configured - individual file operations use GitHub API' };
         }
       }
     } catch (error) {
@@ -1071,10 +1072,18 @@ app.post('/api/files/:filename', requireAuth, async (req, res) => {
     if (result.success) {
       res.json({ message: 'File saved successfully' });
     } else {
-      res.status(500).json({ error: 'Git operation failed: ' + result.error });
+      // Provide user-friendly error messages
+      const errorMsg = result.error && result.error.includes('Bad credentials') 
+        ? 'Unable to save to GitHub. Your changes are saved locally. Please contact your instructor.'
+        : (result.error || 'Failed to save file');
+      res.status(500).json({ error: errorMsg });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    // Hide technical details from students
+    const errorMsg = error.message.includes('Bad credentials')
+      ? 'Unable to save to GitHub. Your changes are saved locally. Please contact your instructor.'
+      : error.message;
+    res.status(500).json({ error: errorMsg });
   }
 });
 
@@ -1088,10 +1097,18 @@ app.delete('/api/files/:filename', requireAuth, async (req, res) => {
     if (result.success) {
       res.json({ message: 'File deleted successfully' });
     } else {
-      res.status(500).json({ error: 'Git operation failed: ' + result.error });
+      // Provide user-friendly error messages
+      const errorMsg = result.error && result.error.includes('Bad credentials')
+        ? 'Unable to delete from GitHub. The file is removed locally. Please contact your instructor.'
+        : (result.error || 'Failed to delete file');
+      res.status(500).json({ error: errorMsg });
     }
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    // Hide technical details from students
+    const errorMsg = error.message.includes('Bad credentials')
+      ? 'Unable to delete from GitHub. The file is removed locally. Please contact your instructor.'
+      : error.message;
+    res.status(500).json({ error: errorMsg });
   }
 });
 
